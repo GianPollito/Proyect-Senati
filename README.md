@@ -1,4 +1,4 @@
-﻿## App de futbol
+﻿## App de Videojuegos
 ### Gestion de mi proyecto de 3 senestre
 
 - Index.html
@@ -23,4 +23,5 @@ clona el repositorio en tu terminal
 
 ## Autores
 - Gianmarco Garbozo
+
 
