@@ -22,7 +22,8 @@ clona el repositorio en tu terminal
 ```bash https://github.com/GianPollito/Proyect-Senati.git ```
 
 ## Autores
-- Gianmarco Garbozo
+- Gianmarco Garbozo Obregon
+
 
 
 
