@@ -1,5 +1,5 @@
 ﻿## App de Videojuegos
-### Gestion de mi proyecto de 3 senestre
+### Gestion de mi proyecto de 3 semestre
 
 - Index.html
 En este archivo se ejecuta la interfaz principal del proyecto
@@ -23,5 +23,6 @@ clona el repositorio en tu terminal
 
 ## Autores
 - Gianmarco Garbozo
+
 
 
