@@ -12,7 +12,7 @@ API REST desarrollada con Node.js, Express y PostgreSQL (Prisma ORM).
 
 1. Clonar el repositorio:
 ```bash
-git clone <url-del-repositorio>
+git clone <https://github.com/GianPollito/Proyect-Senati.git>
 cd mi-api-backend
 ```
 
