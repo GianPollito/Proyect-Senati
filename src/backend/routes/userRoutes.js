@@ -8,5 +8,8 @@ router.get('/',userController.getUsers);
 router.post('/',userController.createUser);
 router.put('/:id', userController.updateUser);
 
+//Metodo para eliminar DELETE
+//Metodo para actualizar PUT
+//Metodo para modificar PATCH
 
 export default router;
