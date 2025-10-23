@@ -2,7 +2,7 @@
 
 ## Información del Documento
 
-**Última actualización:** [DD/MM/YYYY]  
+**Última actualización:** [23/10/2025]  
 **Versión del prototipo:** [v1.0]  
 **Herramienta:** Figma  
 
@@ -23,7 +23,7 @@ Este documento centraliza toda la información sobre los **diseños y prototipos
 ## Enlaces Principales
 
 ### Proyecto Principal
-**URL:** [https://www.figma.com/file/XXXXX/nombre-proyecto](URL_COMPLETA_DE_FIGMA)
+**URL:** https://www.figma.com/design/W7sHyGH04mIFQgvjINGpkv/APP-VIDEOJUEGOS-GO-GAMES?node-id=0-1&t=2TljnCjcdh4kFirY-1
 
 ---
 
@@ -117,8 +117,8 @@ Este documento centraliza toda la información sobre los **diseños y prototipos
 ### Responsive Design
 
 **Breakpoints definidos:**
-- **Mobile:** 320px - 767px
-- **Desktop:** 1024px+
+- **Mobile:** 402px - 874px
+- **Desktop:** 1440px+
 
 ### Accesibilidad
 
@@ -193,7 +193,7 @@ R: Selecciona el elemento → Export → Configura formato y resolución → Exp
 
 ## Contacto y Soporte
 
-**Responsable de diseño:** [Nombre]  
+**Responsable de diseño:** [Gianmarco Garbozo]  
 **Canal de comunicación:** [Slack, Discord, etc.]  
 **Horario de disponibilidad:** [Especificar]
 
@@ -220,6 +220,6 @@ R: Selecciona el elemento → Export → Configura formato y resolución → Exp
 
 ---
 
-**Última actualización:** [Fecha]  
+**Última actualización:** [23/10/2025]  
 **Mantenido por:** [Equipo de diseño/Product Owner]  
 **Versión del documento:** 1.0
