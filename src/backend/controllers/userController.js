@@ -41,22 +41,22 @@ export const userController = {
     },
 
     async updateUser(req, res) {
-    try {
-      const { id } = req.params;
-      const updateData = req.body;
+        try {
+            const { id } = req.params;
+            const updateData = req.body;
 
-      const updatedUser = await userService.updateUser(id, updateData);
+            const updatedUser = await userService.updateUser(id, updateData);
       
-      res.status(200).json({
-        success: true,
-        data: updatedUser,
-        message: 'Usuario actualizado exitosamente'
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message
-      });
+            res.status(200).json({
+                success: true,
+                data: updatedUser,
+                message: 'Usuario actualizado exitosamente'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
     }
-  }
 }

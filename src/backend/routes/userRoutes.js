@@ -20,6 +20,8 @@ const router = express.Router();
  *          example: Gian Pollito
  */
 
+//Rutas para llamar al usuario
+router.get('/',userController.getUsers);
 
 /**
  * @swagger
@@ -31,6 +33,8 @@ const router = express.Router();
  *      200:
  *        description: OK
  */
+
+router.post('/',userController.createUser);
 
 /**
  * @swagger
@@ -63,19 +67,49 @@ const router = express.Router();
  *        description: Error del servidor
  */
 
-/**
- * @swagger
- * /api/users:
- * put:
- */
-
-//Rutas para llamar al usuario
-router.get('/',userController.getUsers);
-router.post('/',userController.createUser);
 router.put('/:id', userController.updateUser);
 
+/**
+ * @swagger
+ * /api/users/{id}:
+ *  put:
+ *    summary: Actualizar usuario
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *        description: id del usuario que se desea actualizar
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: giang@gmail.com
+ *              name:
+ *                type: string
+ *                example: gian
+ *    responses:
+ *      201:
+ *        description: Actualizado correctamente
+ *        content:
+ *          application/json:
+ *            $ref: '#/components/schemas/User'
+ *      400:
+ *        description: Datos invalidos
+ *      500:
+ *        description: Error del servidor
+*/
+
+router.delete('/:name', userController.deleteUser);
+
 //Metodo para eliminar DELETE
-//Metodo para actualizar PUT
 //Metodo para modificar PATCH
 
 export default router;
