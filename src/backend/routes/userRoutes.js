@@ -31,7 +31,6 @@ const router = express.Router();
  *        description: OK
  */
 
-//Rutas para llamar al usuario
 router.get('/',userController.getUsers);
 
 /**
