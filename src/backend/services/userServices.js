@@ -34,5 +34,24 @@ export const userService ={
         }catch (error) {
             throw new Error('Error al actualizar usuario: ' + error.message);
         }
+    },
+
+    //Eliminar usuario
+    async deleteUser(name){
+        try{
+            const existingUser = await prisma.user.findFirst({
+                where: {name}
+            });
+            if(!existingUser){
+                return null;
+            }
+
+            const deletedUser = await prisma.user.delete({
+                where: {id: existingUser.id}
+            });
+            return deletedUser;
+        }catch(error){
+            throw new Error ('Error al eliminar usuario'+ error.message);
+        }
     }
 }

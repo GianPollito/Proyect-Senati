@@ -107,11 +107,46 @@ router.post('/',userController.createUser);
 
 router.put('/:id', userController.updateUser);
 
-
+/**
+ * @swagger
+ * /api/users/{name}:
+ *  delete:
+ *    summary: Eliminar un usuario por name
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: name
+ *        required: true
+ *        schema:
+ *          type: string
+ *        description: Nombre del usuario que desea eliminar
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: gianmarcog@gmail.com
+ *              name:
+ *                type: string
+ *                example: gianmarco
+ *              message:
+ *                type: string
+ *                example: Usuario eliminado correctamente
+ *    responses:
+ *      200:
+ *        description: Usuario eliminado correctamente
+ *      404:
+ *        description: Usuario no encontrado
+ *      500:
+ *        description: Error del servidor
+ */
 
 router.delete('/:name', userController.deleteUser);
 
-//Metodo para eliminar DELETE
 //Metodo para modificar PATCH
 
 export default router;
