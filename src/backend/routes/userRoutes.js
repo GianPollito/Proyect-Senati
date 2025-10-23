@@ -20,9 +20,6 @@ const router = express.Router();
  *          example: Gian Pollito
  */
 
-//Rutas para llamar al usuario
-router.get('/',userController.getUsers);
-
 /**
  * @swagger
  * /api/users:
@@ -34,7 +31,8 @@ router.get('/',userController.getUsers);
  *        description: OK
  */
 
-router.post('/',userController.createUser);
+//Rutas para llamar al usuario
+router.get('/',userController.getUsers);
 
 /**
  * @swagger
@@ -67,7 +65,7 @@ router.post('/',userController.createUser);
  *        description: Error del servidor
  */
 
-router.put('/:id', userController.updateUser);
+router.post('/',userController.createUser);
 
 /**
  * @swagger
@@ -106,6 +104,10 @@ router.put('/:id', userController.updateUser);
  *      500:
  *        description: Error del servidor
 */
+
+router.put('/:id', userController.updateUser);
+
+
 
 router.delete('/:name', userController.deleteUser);
 
