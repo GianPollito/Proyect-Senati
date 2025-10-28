@@ -1,6 +1,6 @@
 import  {userService} from '../services/userServices.js';
 
-export const userController = {
+export const userControllers = {
     async getUsers(req, res){
         try{
             const users = await userService.getAllUsers();
@@ -65,7 +65,7 @@ export const userController = {
             const {name} = req.params;
             const deletedData = req.body;
 
-            const deletedUser = await userServices.deleteUser(name, deletedData);
+            const deletedUser = await userService.deleteUser(name, deletedData);
 
             if(!deletedUser){
                 return res.status(404).json({
