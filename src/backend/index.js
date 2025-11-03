@@ -30,5 +30,5 @@ app.use("/api/email", emailRoutes);
 app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
-   console.log(`Servidor corriendo y escuchando en el puerto ${PORT}`);
+  console.log(`Servidor corriendo y escuchando en el puerto ${PORT}`);
 });

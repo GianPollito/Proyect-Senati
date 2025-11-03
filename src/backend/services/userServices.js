@@ -2,7 +2,7 @@ import {PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient;
 
-export const userServices ={
+export const userService ={
     //Crear usuarios
     async createUser(data){
         try{
@@ -20,7 +20,7 @@ export const userServices ={
         try{
             return await prisma.user.findMany();
         }catch(error){
-            throw new Error ('Error al obtener usuarios' + error.message);
+            throw Error ('Error al obtener usuarios' + error.message);
         }
     },
 
@@ -37,21 +37,13 @@ export const userServices ={
     },
 
     //Eliminar usuario
-    async deleteUser(name){
-        try{
-            const existingUser = await prisma.user.findFirst({
-                where: {name}
+    async deleteUser(id) {
+        try {
+            return await prisma.user.delete({
+                where: { id: parseInt(id) }
             });
-            if(!existingUser){
-                return null;
-            }
-
-            const deletedUser = await prisma.user.delete({
-                where: {id: existingUser.id}
-            });
-            return deletedUser;
-        }catch(error){
-            throw new Error ('Error al eliminar usuario'+ error.message);
+        } catch (error) {
+            throw new Error('Error al eliminar usuario: ' + error.message);
         }
     }
 }

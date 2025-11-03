@@ -100,6 +100,8 @@ router.post('/',userControllers.createUser);
  *            $ref: '#/components/schemas/User'
  *      400:
  *        description: Datos invalidos
+ *      404:
+ *        description: Usuario no encontrado
  *      500:
  *        description: Error del servidor
 */
@@ -108,33 +110,17 @@ router.put('/:id', userControllers.updateUser);
 
 /**
  * @swagger
- * /api/users/{name}:
+ * /api/users/{id}:
  *  delete:
- *    summary: Eliminar un usuario por name
+ *    summary: Eliminar usuario
  *    tags: [Users]
  *    parameters:
  *      - in: path
- *        name: name
+ *        name: id
  *        required: true
  *        schema:
- *          type: string
- *        description: Nombre del usuario que desea eliminar
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              email:
- *                type: string
- *                example: gianmarcog@gmail.com
- *              name:
- *                type: string
- *                example: gianmarco
- *              message:
- *                type: string
- *                example: Usuario eliminado correctamente
+ *          type: integer
+ *        description: ID del usuario
  *    responses:
  *      200:
  *        description: Usuario eliminado correctamente
@@ -142,9 +128,10 @@ router.put('/:id', userControllers.updateUser);
  *        description: Usuario no encontrado
  *      500:
  *        description: Error del servidor
+ *
  */
 
-router.delete('/:name', userControllers.deleteUser);
+router.delete('/:id', userControllers.deleteUser);
 
 //Metodo para modificar PATCH
 

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { hashPassword, comparePassword, generateToken } from "../utils/auth.js";
 
-const prisma = new PrismaClient;
+const prisma = new PrismaClient();
 
 export const authServices = {
     //Registrar usuario
