@@ -1,7 +1,8 @@
 import { authServices } from "../services/authServices.js";
+import { generateToken } from "../utils/auth.js";
 
 export const authControllers = {
-    //Registro
+    //Registro Tradicional
     async register(req, res){
         try{
             const {email, name, password} = req.body;
@@ -17,6 +18,17 @@ export const authControllers = {
                 succes: false,
                 message: error.message
             });
+        }
+    },
+
+    //Google Callback
+    async googleCallback(){
+        try{
+            const user = req.user;
+            const token = generateToken (user,id, user.email);
+            res.redirect(`http://localhost:5173/`); //Aqui url de frontend
+        }catch(error){
+            res.redirect(`http://localhost:5173/`); //Vista de front
         }
     }
 };
