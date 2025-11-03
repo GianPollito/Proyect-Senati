@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily:{
-        sans:["Bitcount Grid Single", "sans-serif"]
+        sans: ["Bitcount Grid Single", "sans-serif"]
       }
     },
   },
