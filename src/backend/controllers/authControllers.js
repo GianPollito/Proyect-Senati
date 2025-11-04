@@ -22,13 +22,13 @@ export const authControllers = {
     },
 
     //Google Callback
-    async googleCallback(){
+    async googleCallback(req, res){
         try{
             const user = req.user;
-            const token = generateToken (user,id, user.email);
-            res.redirect(`http://localhost:5173/login-success?token=${token}`); //Vista de frontend
+            const token = generateToken (user.id, user.email);
+            res.redirect(`http://localhost:5173/login-success?token=${token}`); //Vista de frontend exitoso
         }catch(error){
-            res.redirect(`http://localhost:5173/login-error?message=$`); //Vista de frontend
+            res.redirect(`http://localhost:5173/login-error?message=${error.message}`); //Vista de frontend por si falla
         }
     }
 };
