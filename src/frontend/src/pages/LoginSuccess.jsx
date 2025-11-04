@@ -1,21 +1,21 @@
 import { useEffect } from "react";
-import { useSearchParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate, replace } from "react-router-dom";
 
-function LoginSuccess(){
-    const [ searchParams ] = useSearchParams();
-    const navigate = useNavigate();
+function LoginSuccess() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-    useEffect (() => {
-        const token = searchParams.get("token");
+  useEffect (() => {
+    const token = searchParams.get("token");
 
-    if(token){
-        console.log("Token recibido y guardado", token);
-        localStorage.setItem("authToken", token);
-        navigate("/", {replace: true});
-    } else{
-        console.log("No hay token se envia de nuevo a login")
-        console.error("No se recibio ningun token");
-        navigate("/login", {replace: true});
+    if (token) {
+      console.log("Token recibido y guardado", token);
+      localStorage.setItem("authToken", token); 
+      navigate("/", { replace: true} );
+    } else {
+      console.log("No hay token se envia de nuevo a login");
+      console.error("No se recibio ningun token");
+      navigate("/login", { replace: true});
     }
   }, [navigate, searchParams]);
 
