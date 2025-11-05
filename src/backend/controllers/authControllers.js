@@ -21,6 +21,37 @@ export const authControllers = {
         }
     },
 
+    //Login trandicional
+    async login(req,res){
+        try{
+            const {email,password} = req.body;
+            const result = await authServices.login ({email,password});
+
+            res.status(200).json({
+                success: true,
+                message: "Inicio de sesion exitoso",
+                data: result,
+            });
+        } catch(error) {
+          if (error.message == "Email no encontrado"){
+            res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+          }
+          if (error.message ==  "Contraseña incorrecta"){
+            res.status(401).json({
+              success: false,
+              message: error.message,
+            });
+          }
+          res.status(500).json({
+            success: false,
+            message: error.message,
+          });
+        }
+    },
+
     //Google Callback
     async googleCallback(req, res){
         try{
