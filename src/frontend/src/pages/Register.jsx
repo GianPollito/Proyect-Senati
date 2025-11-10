@@ -6,14 +6,14 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); 
   
-  // Para redirigir al usuario después del registro
   const navigate = useNavigate();
 
-  // Función que se ejecuta al enviar el formulario
   const handleSubmit = async (event) => {
     event.preventDefault(); 
     setError(null);
+    setIsLoading(true); 
 
     try {
       const response = await fetch('http://localhost:3000/api/auth/register', {
@@ -35,17 +35,19 @@ function Register() {
 
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoading(false); 
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-md">
-        <h1 className="text-2xl font-bold text-center">Crear una cuenta</h1>
+    <div className="flex items-center justify-center min-h-screen bg-[#1F2123]">
+      <div className="w-full max-w-md p-8 space-y-6 bg-[#2B2D30] rounded-xl shadow-2xl">
+        <h1 className="text-3xl font-bold text-center text-white">Crear una cuenta</h1>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300">
               Nombre
             </label>
             <input
@@ -53,14 +55,15 @@ function Register() {
               name="name"
               type="text"
               required
+              disabled={isLoading}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[#1CD760] focus:border-[#1CD760] bg-[#3A3D40] text-white transition duration-150"
             />
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
               Correo Electrónico
             </label>
             <input
@@ -68,14 +71,15 @@ function Register() {
               name="email"
               type="email"
               required
+              disabled={isLoading}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[#1CD760] focus:border-[#1CD760] bg-[#3A3D40] text-white transition duration-150"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
               Contraseña
             </label>
             <input
@@ -83,28 +87,30 @@ function Register() {
               name="password"
               type="password"
               required
+              disabled={isLoading}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 mt-1 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[#1CD760] focus:border-[#1CD760] bg-[#3A3D40] text-white transition duration-150"
             />
           </div>
 
-          {/* Mensaje de error*/}
-          {error && <p className="text-sm text-center text-red-600">{error}</p>}
+          {error && <p className="text-sm text-center text-red-400">{error}</p>}
 
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              disabled={isLoading}
+              className={`w-full px-4 py-2 font-semibold text-black rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1CD760] transition duration-200 
+                ${isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#1CD760] hover:bg-[#15A64D]'}`}
             >
-              Registrarse
+              {isLoading ? 'Registrando...' : 'Registrarse'}
             </button>
           </div>
         </form>
 
-        <p className="text-sm text-center text-gray-600">
+        <p className="text-sm text-center text-gray-400">
           ¿Ya tienes una cuenta?{' '}
-          <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link to="/login" className="font-medium text-[#1CD760] hover:text-[#15A64D] transition duration-150">
             Inicia sesión
           </Link>
         </p>
