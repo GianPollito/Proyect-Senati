@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import FeedbackModal from '../pages/FeedbackModal';
 
 function Home() {
   const navigate = useNavigate();
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
   const handleGoogleLoginClick = () => {
     navigate('/login');
@@ -35,7 +37,10 @@ function Home() {
         {/* Cabecera (Ajustes y Feedback) - Ahora visibles en fondo blanco */}
         <div className="flex justify-between items-center mb-10 space-x-4 text-black">
           
-          <div className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition duration-150 cursor-pointer">
+          <div 
+            className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition duration-150 cursor-pointer"
+            onClick={() => setIsFeedbackModalOpen(true)}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             Enviar comentarios
           </div>
@@ -50,7 +55,7 @@ function Home() {
         <div className="text-center">
           <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-black mb-8">
             Te damos la bienvenida a<br />
-            Google Go Games
+            Google Play Juegos
           </h1>
 
           <button 
@@ -67,7 +72,7 @@ function Home() {
             <span className="font-semibold">Acceder con Google</span>
           </button>
 
-          <p className="mt-8 text-base text-gray-400">
+          <p className="mt-8 text-base text-gray-700">
             Para jugar en otros dispositivos, accede con la misma<br />
             Cuenta de Google que usas en tu teléfono.
           </p>
@@ -77,6 +82,11 @@ function Home() {
           Tu información se usará de acuerdo con la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500 underline">Política de Privacidad de Google.</a>
         </div>
       </div>
+
+      <FeedbackModal 
+        isOpen={isFeedbackModalOpen} 
+        onClose={() => setIsFeedbackModalOpen(false)} 
+      />
     </div>
   );
 }
