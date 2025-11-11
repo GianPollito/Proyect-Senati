@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FeedbackModal from '../components/FeedbackModal';
+import ConfigurationModal from '../components/ConfigurationModal'; // CLAVE: Importar la nueva modal
 
 function Home() {
   const navigate = useNavigate();
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false); // NUEVO ESTADO
 
   const GOOGLE_AUTH_URL = import.meta.env.VITE_GOOGLE_AUTH_URL;
 
@@ -21,16 +23,12 @@ function Home() {
     navigate('/login');
   };
 
-  const handleConfigClick = () => {
-      navigate('/config');
-  };
-
   return (
     <div className="min-h-screen bg-[#1F2123] text-white flex items-center justify-center p-8 md:p-12 relative overflow-hidden font-sans">
       
       <div className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none">
-        <div className="absolute top-1/4 left-[-100px] w-[500px] h-[150px] bg-white rounded-full opacity-100 transform -rotate-12 blur-sm"></div>
-        <div className="absolute top-0 right-[-50px] w-[300px] h-[100px] bg-white rounded-full opacity-100 blur-sm"></div>
+        <div className="absolute top-1/4 left-[-100px] w-[500px] h-[150px] bg-white rounded-full opacity-100 transform -rotate-12"></div>
+        <div className="absolute top-0 right-[-50px] w-[300px] h-[100px] bg-white rounded-full opacity-100"></div>
         
         <div className="absolute bottom-10 right-10 w-[200px] h-[30px] bg-[#F5F5F5] rotate-[-5deg] rounded-md"></div>
         <div className="absolute bottom-20 right-14 w-[250px] h-[30px] bg-[#F5F5F5] rotate-[-2deg] rounded-md"></div>
@@ -78,9 +76,9 @@ function Home() {
           
           <div 
             className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition duration-150 cursor-pointer"
-            onClick={handleConfigClick}
+            onClick={() => setIsConfigModalOpen(true)}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.46l-.54.27a2 2 0 0 0-1.2.98L7 8.52l-2.73.57a2 2 0 0 0-1.74 2.37l.45 1.55a2 2 0 0 0 1.2 1.2l.57.27a2 2 0 0 0 1.94 0l.57-.27a2 2 0 0 0 1.2-1.2l.45-1.55a2 2 0 0 0-1.74-2.37L7 8.52l2.73-.57a2 2 0 0 0 1.74-2.37l-.45-1.55a2 2 0 0 0-1.2-1.2l-.57-.27a2 2 0 0 0-1.94 0l-.57.27a2 2 0 0 0-1.2 1.2l-.45 1.55a2 2 0 0 0 1.74 2.37L7 8.52l-2.73.57a2 2 0 0 0-1.74 2.37l.45 1.55a2 2 0 0 0 1.2 1.2l-.57.27a2 2 0 0 0 1.94 0l-.57-.27a2 2 0 0 0-1.2-1.2l-.45-1.55a2 2 0 0 0-1.74-2.37zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.46l-.54.27a2 2 0 0 0-1.2.98L7 8.52l-2.73.57a2 2 0 0 0-1.74 2.37l.45 1.55a2 2 0 0 0 1.2 1.2l.57.27a2 2 0 0 0 1.94 0l.57-.27a2 2 0 0 0 1.2-1.2l.45-1.55a2 2 0 0 0-1.74-2.37zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/></svg>
             Configuración
           </div>
         </div>
@@ -131,6 +129,10 @@ function Home() {
       <FeedbackModal 
         isOpen={isFeedbackModalOpen} 
         onClose={() => setIsFeedbackModalOpen(false)} 
+      />
+      <ConfigurationModal 
+        isOpen={isConfigModalOpen} 
+        onClose={() => setIsConfigModalOpen(false)} 
       />
     </div>
   );

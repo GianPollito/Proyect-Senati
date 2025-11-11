@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthProvider';
@@ -8,8 +7,8 @@ import Home from "./pages/Home.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
 import LoginSuccess from "./pages/LoginSuccess.jsx";
-import Dashboard from "./pages/Dashboard.jsx"; 
-import Configuration from "./pages/Configuration.jsx"; 
+import MainPage from "./pages/MainPage.jsx"; 
+import ConfigurationModal from "./components/ConfigurationModal.jsx"; 
 
 
 function App() {
@@ -17,8 +16,9 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-
-          <Route path="/config" element={ <Configuration /> } />
+          
+          <Route path="/config" element={ <ConfigurationModal /> } />
+          <Route path="/welcome" element={ <Home /> } /> 
           
           <Route element={<PublicRoute />}>
             <Route path="/login" element={ <Login /> } /> 
@@ -27,7 +27,7 @@ function App() {
           </Route>
 
           <Route element={<PrivateRoute />}>
-            <Route path="/" element={ <Dashboard /> } /> 
+            <Route path="/" element={ <MainPage /> } /> 
           </Route>
 
           <Route path="*" element={ <Navigate to="/" replace /> } />

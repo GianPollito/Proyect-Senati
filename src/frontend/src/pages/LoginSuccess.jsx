@@ -56,7 +56,7 @@ function LoginSuccess() {
         {token ? (
           <>
             <h1 className="text-3xl font-bold mb-4 text-[#1CD760]">¡Ingreso Exitoso!</h1>
-            <p className="mb-6 text-gray-200">Serás redirigido al Dashboard en unos segundos.</p>
+            <p className="mb-6 text-gray-200">Serás redirigido al MainPage en unos segundos.</p>
             <div className="p-3 bg-[#3A3D40] rounded-lg border border-gray-600 break-all text-sm">
                 <p className="text-gray-400">Token:</p>
                 <p className="text-gray-300 mt-1">{token}</p>

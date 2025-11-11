@@ -1,7 +1,6 @@
-import React from 'react';
 import { useAuth } from '../context/AuthProvider';
 
-function Dashboard() {
+function MainPage() {
   const { token, logout } = useAuth();
   
   const handleLogout = () => {
@@ -39,4 +38,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default MainPage;
