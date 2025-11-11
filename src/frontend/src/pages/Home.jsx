@@ -13,17 +13,17 @@ function Home() {
   return (
     <div className="min-h-screen bg-[#1F2123] text-white flex items-center justify-center p-8 md:p-12 relative overflow-hidden font-sans">
       
-      {/* Elementos de fondo decorativos (ilusión de Play Juegos) */}
+      
       <div className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none">
-        <div className="absolute top-1/4 left-[-100px] w-[500px] h-[150px] bg-white rounded-full opacity-10 transform -rotate-12 blur-sm"></div>
-        <div className="absolute top-0 right-[-50px] w-[300px] h-[100px] bg-white rounded-full opacity-10 blur-sm"></div>
+        <div className="absolute top-1/4 left-[-100px] w-[500px] h-[150px] bg-white rounded-full opacity-100 transform -rotate-12"></div>
+        <div className="absolute top-0 right-[-50px] w-[300px] h-[100px] bg-white rounded-full opacity-100"></div>
         
-        <div className="absolute bottom-10 right-10 w-[200px] h-[30px] bg-[#614D3F] rotate-[-5deg] rounded-md"></div>
-        <div className="absolute bottom-20 right-14 w-[250px] h-[30px] bg-[#614D3F] rotate-[-2deg] rounded-md"></div>
+        <div className="absolute bottom-10 right-10 w-[200px] h-[30px] bg-[#F5F5F5] rotate-[-5deg] rounded-md"></div>
+        <div className="absolute bottom-20 right-14 w-[250px] h-[30px] bg-[#F5F5F5] rotate-[-2deg] rounded-md"></div>
 
-        <div className="absolute right-10 md:right-40 top-1/4 w-40 h-40 bg-gray-500 rounded-full opacity-20 transform -translate-y-1/2">
-            <div className="absolute inset-0 m-auto w-20 h-20 rounded-full bg-[#1CD760] flex items-center justify-center shadow-2xl">
-                <svg className="w-8 h-8 text-black ml-1" viewBox="0 0 24 24" fill="currentColor">
+        <div className="absolute right-10 md:right-40 top-1/4 w-40 h-40 bg-white rounded-full opacity-100 transform -translate-y-1/2">
+            <div className="absolute inset-0 m-auto w-20 h-20 rounded-full bg-red-500 flex items-center justify-center shadow-2xl">
+                <svg className="w-8 h-8 text-white-500 ml-1" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8 5v14l11-7z"/>
                 </svg>
             </div>
@@ -31,11 +31,10 @@ function Home() {
       </div>
 
 
-      {/* CONTENIDO PRINCIPAL: EL CUADRO BLANCO CENTRADO */}
       <div className="relative z-10 p-10 bg-white rounded-xl shadow-2xl w-full max-w-lg">
         
-        {/* Cabecera (Ajustes y Feedback) - Ahora visibles en fondo blanco */}
-        <div className="flex justify-between items-center mb-10 space-x-4 text-black">
+        
+        <div className="flex justify-between items-center mb-12 space-x-4 text-black">
           
           <div 
             className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition duration-150 cursor-pointer"
@@ -53,9 +52,9 @@ function Home() {
 
 
         <div className="text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-black mb-8">
+          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-black mb-10">
             Te damos la bienvenida a<br />
-            Google Play Juegos
+            Google Play Go Games
           </h1>
 
           <button 
@@ -79,7 +78,7 @@ function Home() {
         </div>
 
         <div className="relative z-10 text-xs text-gray-500 mt-8 text-center">
-          Tu información se usará de acuerdo con la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500 underline">Política de Privacidad de Google.</a>
+          Tu información se usará de acuerdo con la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:text-red-500 underline">Política de Privacidad de Google.</a>
         </div>
       </div>
 
