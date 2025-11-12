@@ -17,14 +17,14 @@ const MOCK_GAMES = [
 ];
 
 const GAME_COVERS = {
-    "Mobile Legends: Bang Bang": "https://images.unsplash.com/photo-1542385152-a5483a93a62f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Carátula de MLBB
-    "Wuthering Waves": "https://images.unsplash.com/photo-1627916694663-7e4e0d9b4c0e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Carátula estilo anime
-    "Geometry Dash Lite": "https://placehold.co/250x187/3498DB/FFF?text=GEOMETRY+DASH+LITE",
-    "Geometry Dash SubZero": "https://placehold.co/250x187/1ABC9C/FFF?text=GD+SUBZERO",
-    "Geometry Dash World": "https://placehold.co/250x187/E74C3C/FFF?text=GD+WORLD",
-    "Shadow Fight 4: Arena": "https://images.unsplash.com/photo-1594967396117-640f0c08b8b9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Mock de lucha
-    "Art of War 3: RTS estrategia": "https://images.unsplash.com/photo-1582218084534-114af9641c88?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Mock RTS
-    "Solo Leveling: Arise": "https://images.unsplash.com/photo-1583095627622-4916a2469a4e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Mock anime oscuro
+    "Mobile Legends: Bang Bang": "/image11.svg", 
+    "Wuthering Waves": "/image12.svg", 
+    "Geometry Dash Lite": "/image13.svg", 
+    "Lichess": "/image14.svg", 
+    "Geometry Dash SubZero": "/image15.svg", 
+    "Geometry Dash World": "/image16.svg",
+    "BombSquad": "/image17.svg",
+    "Bloody Bastards": "/image18.svg",
 };
 
 // Función para obtener la ruta de la imagen, con fallback a PLACEHOLDER_IMG si no está mapeada.
@@ -63,9 +63,16 @@ const GameCard = ({ game, index }) => {
                 
                 {/* Texto de Subtítulo y Rating */}
                 <div className="absolute bottom-0 left-0 p-3 text-white">
-                    <h3 className="text-sm font-bold truncate">{game.title}</h3>
-                    <p className="text-xs text-gray-400 mt-0.5">{game.rating} | {game.subtitle}</p>
-                </div>
+                    <h3 className="text-sm font-bold truncate">{game.title}</h3>
+                    <p className="text-xs text-gray-400 mt-0.5 flex items-center">
+                        {/* INICIO DEL CÓDIGO DE LA ESTRELLA */}
+                        <svg className="w-3 h-3 text-yellow-400 mr-1" fill="#ff9900ff" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.178 3.614a1 1 0 00.95.691h3.805c.969 0 1.371 1.24.588 1.81l-3.082 2.242a1 1 0 00-.364 1.118l1.178 3.614c.3.921-.755 1.688-1.541 1.118l-3.082-2.242a1 1 0 00-1.178 0l-3.082 2.242c-.786.57-1.841-.197-1.541-1.118l1.178-3.614a1 1 0 00-.364-1.118L2.012 9.042c-.783-.57-.381-1.81.588-1.81h3.805a1 1 0 00.95-.691l1.178-3.614z"/>
+                        </svg>
+                        {/* FIN DEL CÓDIGO DE LA ESTRELLA */}
+                        {game.rating} | {game.subtitle}
+                    </p>
+                </div>
             </div>
         </div>
     );
@@ -343,4 +350,3 @@ function MainPage() {
 }
 
 export default MainPage;
-
