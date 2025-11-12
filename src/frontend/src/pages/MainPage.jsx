@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthProvider'; // RESTAURADA
-import { useNavigate } from 'react-router-dom'; // RESTAURADA
+/*
+// Estas importaciones son necesarias para tu proyecto local, pero causan error de compilación aquí.
+import { useAuth } from '../context/AuthProvider'; 
+import { useNavigate } from 'react-router-dom';
+// import FeedbackModal from '../components/FeedbackModal'; // Importación de tu modal real (comentada)
+*/
 
 // Datos Mock para los juegos
 const MOCK_GAMES = [
@@ -14,20 +18,21 @@ const MOCK_GAMES = [
     { title: "Bloody Bastards", subtitle: "Acción", rating: "4.6" },
 ];
 
-// Rutas de Imágenes para la Librería (8 elementos, Ruta corregida: /public/imageX.svg)
+// Rutas de Imágenes para la Librería (8 elementos, Ruta corregida: /imageX.svg)
 const LIBRARY_IMAGES = [
-    '/public/image1.svg', 
-    '/public/image2.svg',
-    '/public/image3.svg', 
-    '/public/image4.svg', 
-    '/public/image5.svg', 
-    '/public/image6.svg', 
-    '/public/image7.svg', 
-    '/public/image8.svg', 
+    '/image1.svg',
+    '/image2.svg',
+    '/image3.svg',
+    '/image4.svg',
+    '/image5.svg',
+    '/image6.svg',
+    '/image7.svg',
+    '/image8.svg',
 ];
 
 // Fallback image source (placeholder)
 const PLACEHOLDER_IMG = "https://placehold.co/250x100/374151/FFF?text=GAME+IMAGE+FALLBACK";
+
 
 // Componente de Tarjeta de Juego
 const GameCard = ({ game, index }) => {
@@ -49,20 +54,27 @@ const GameCard = ({ game, index }) => {
 
 // --- COMPONENTE DE PÁGINA "DE TU BIBLIOTECA" ---
 const LibraryPage = () => {
+    // Usamos el array de 16 imágenes para que esta vista muestre la lista completa
+    const FULL_LIBRARY_IMAGES = [
+        '/image1.svg', '/image2.svg', '/image3.svg', '/image4.svg',
+        '/image5.svg', '/image6.svg', '/image7.svg', '/image8.svg',
+        '/image9.svg', '/image10.svg', '/image11.svg', '/image12.svg',
+        '/image13.svg', '/image14.svg', '/image15.svg', '/image16.svg', 
+    ];
+
     return (
         <div className="p-6 h-full flex flex-col">
             <h2 className="text-3xl font-bold mb-4 text-white">De tu biblioteca</h2>
             {/* Contenedor principal para las 8 imágenes (h-full y flex-col) */}
             <div className="flex-grow overflow-y-auto space-y-4 pr-2">
-                {LIBRARY_IMAGES.map((src, i) => (
-                    // CLAVE: flex-1 asegura que las 8 imágenes ocupen la altura disponible cada una
-                    // Añadimos 'min-h-0' para que el flexbox funcione correctamente en el scroll
+                {FULL_LIBRARY_IMAGES.map((src, i) => (
+                    // CLAVE: flex-1 asegura que las imágenes ocupen la altura disponible uniformemente
                     <div key={i} className="flex-1 min-h-0 w-full rounded-lg overflow-hidden shadow-xl cursor-pointer hover:opacity-90 transition duration-200">
                         <img 
                             src={src} 
                             alt={`Juego ${i + 1}`} 
                             // CLAVE: Aspecto rectangular y misma medida para todas
-                            className="w-full h-full object-cover" 
+                            className="w-full h-full" 
                             onError={(e) => { e.target.onerror = null; e.target.src=PLACEHOLDER_IMG }}
                         />
                     </div>
@@ -90,38 +102,42 @@ const GamesPage = () => (
 
 
 function MainPage() {
-  const { logout } = useAuth(); // Restaurado
-  // Estado para la navegación interna de la sidebar
+  /*
+  const { logout } = useAuth(); 
+  const navigate = useNavigate(); 
+  */
+  
   const [activeSection, setActiveSection] = useState('home'); 
-  const navigate = useNavigate(); // Restaurado
+  // const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false); // Estado de modal ELIMINADO
 
   const handleLogout = () => {
-     logout();
-     // navigate('/login'); // Usar si tienes la ruta de login
-     console.log('Logout y navegación (funciones restauradas al descomentar las importaciones)');
+     console.log('Logout placeholder');
   };
   
-  // Función para la navegación a detalles (manteniéndose para el botón)
   const handleViewDetails = () => {
-    // Usamos console.log en lugar de alert()
     console.log("¡Navegando a los detalles de Sonic Rumble! (Ruta /details implementada en el futuro)");
   };
 
-  // NUEVA FUNCIÓN: Abre la modal de configuración
+  // FUNCIONES DE MARCADOR PARA ÍCONOS INFERIORES - RESTAURADAS
+  const handleAvisosClick = () => {
+      console.log("Abrir Vista de Avisos/Notificaciones.");
+  };
+  const handleDownloadsClick = () => {
+      console.log("Abrir Vista de Descargas.");
+  };
   const handleSettingsOpen = () => {
-      // Usamos console.log en lugar de alert()
-      console.log("Abriendo Configuración...");
+      // Esta función maneja el clic en el ícono de 'Enviar Comentarios' (Globo de Mensaje)
+      console.log("Abriendo Configuración/Enviar Comentarios."); 
   };
 
-  // Función para renderizar el contenido central según la sección activa
+
   const renderContent = () => {
     switch (activeSection) {
       case 'search':
         return <SearchPage />;
       case 'games':
-        // Mantenemos el componente por si se planea usar.
         return <GamesPage />;
-      case 'library': // NUEVO CASO para la vista de biblioteca completa
+      case 'library': 
         return <LibraryPage />;
       case 'home':
       default:
@@ -156,38 +172,26 @@ function MainPage() {
     }
   };
 
-  // Clase para el icono activo: (Siempre rojo si es la sección actual)
+
   const getIconClass = (section) => {
     if (activeSection === section) {
-        return 'text-red-500'; // ROJO si está seleccionado
+        return 'text-red-500'; 
     }
-    // CLAVE: Normal es blanco, hover es gris (gray-400), active (clic) es gris más oscuro (gray-600)
     return 'text-white hover:text-gray-400 active:text-gray-600'; 
   };
   
-  // FUNCIONALIDADES ADICIONALES
-  const handleAvisosClick = () => {
-      console.log("Abrir Vista de Avisos/Notificaciones.");
-  };
-  const handleDownloadsClick = () => {
-      console.log("Abrir Vista de Descargas.");
-  };
-  // La función handleSettingsOpen se mantiene para la claridad del icono.
-
 
   return (
-    // CLAVE: h-screen y overflow-hidden en el contenedor principal del componente
     <div className="h-screen bg-[#1F2123] text-white font-sans overflow-hidden">
-      
+        
       {/* Estructura de Tres Columnas Fijas (Sidebar, Contenido Principal, Librería Lateral) */}
       <div className="grid grid-cols-[90px_1fr_250px] h-full"> 
         
         {/* COLUMNA 1: Navegación Fija Izquierda (Sidebar) */}
-        {/* Esta columna es estática y no se desplaza */}
         <div className="bg-[#1F2123] pt-4 pb-4 flex flex-col items-center border-r border-gray-800 h-full">
           
-          {/* LOGO/USUARIO RESTAURADO (Círculo Amarillo) */}
-          <div className="flex flex-col items-center mb-8">
+          {/* LOGO/USUARIO */}
+          <div className="flex flex-col items-center mb-8" onClick={handleLogout}>
               <div className="h-10 w-10 bg-yellow-500 rounded-full cursor-pointer transform hover:scale-110 transition duration-150 relative">
                   {/* Icono de Usuario (o imagen de perfil) */}
               </div>
@@ -196,44 +200,40 @@ function MainPage() {
           {/* ÍCONOS DE NAVEGACIÓN SUPERIOR */}
           <div className="space-y-8"> 
             {/* 1. Home/Dashboard */}
-            {/* CLAVE: Usamos la clase corregida */}
             <div className={getIconClass('home') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('home')}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
             </div>
             
-            {/* 2. Juegos/Categorías - ÍCONO ELIMINADO */}
-            {/* <div className={getIconClass('games') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('games')}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h4"/></svg>
-            </div> 
-            */}
-
-            {/* 3. Biblioteca (Libro/Ventana) - AHORA ARRIBA DE BÚSQUEDA */}
+            {/* 2. Biblioteca (Libro/Ventana) */}
             <div className={getIconClass('library') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('library')}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
             </div>
 
-            {/* 4. Búsqueda (Lupa) - AHORA DEBAJO DE BIBLIOTECA */}
+            {/* 3. Búsqueda (Lupa) */}
             <div className={getIconClass('search') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('search')}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </div>
             
           </div>
           
-          {/* SEPARADOR Y ÍCONOS INFERIORES (Utilizamos flex-grow para empujar hacia abajo) */}
+          {/* SEPARADOR Y ÍCONOS INFERIORES */}
           <div className="flex-grow"></div> 
           
           <div className="space-y-8 mb-4">
-              {/* 5. Avisos (Campana) */}
+              
+              {/* 4. Avisos (Campana) */}
               <div className="text-white hover:text-gray-400 cursor-pointer p-1 rounded-md" onClick={handleAvisosClick}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.37 21a2 2 0 0 0 3.26 0"></path></svg>
               </div>
-              {/* 6. Descargas / Instalaciones */}
+
+              {/* 5. Descargas / Instalaciones */}
               <div className="text-white hover:text-gray-400 cursor-pointer p-1 rounded-md" onClick={handleDownloadsClick}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               </div>
-              {/* 7. Ajustes / Configuración */}
+              
+              {/* 6. Enviar Comentarios (Globo de Mensaje - ÚLTIMO ÍCONO) */}
               <div className="text-white hover:text-gray-400 cursor-pointer p-1 rounded-md" onClick={handleSettingsOpen}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </div>
           </div>
           
@@ -268,12 +268,11 @@ function MainPage() {
 
                   {/* Contenido de Texto y Botón (Izquierda) */}
                   <div className="relative z-10 p-10 max-w-xl h-full flex flex-col justify-end">
-                      <h2 className="text-5xl font-black mb-3 text-[#FF0000]">SONIC RUMBLE</h2> {/* CLAVE: Título en Rojo */}
+                      <h2 className="text-5xl font-black mb-3 text-[#FF0000]">SONIC RUMBLE</h2> 
                       <h3 className="text-xl font-semibold text-gray-300">Pelea con Sonic y sus amigos</h3>
                       <p className="text-xs text-gray-400 mt-2">Sonic Rumble | SEGA CORPORATION</p>
                           
                       <div className="mt-6">
-                          {/* CLAVE: Botón con función y estilo verde del original */}
                           <button 
                               onClick={handleViewDetails}
                               className="px-6 py-2 bg-[#00A38D] text-white font-bold rounded-lg hover:bg-[#008F7D] transition duration-150"
@@ -293,41 +292,35 @@ function MainPage() {
             
         </div>
 
-        {/* COLUMNA 3: Librería Lateral Derecha (Fija y Estilizada - EN TU BIBLIOTECA) */}
-        {/* Usamos h-full y flex flex-col para forzar el contenido a ocupar la altura completa */}
-        <div className="bg-[#1F2123] p-4 border-l border-gray-800 h-full flex flex-col"> 
-            <h3 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2 text-red-500">En tu biblioteca</h3>
+        {/* COLUMNA 3: Librería Lateral Derecha (Fija y Estilizada) */}
+        <div className="bg-[#1F2123] px-2 py-4 border-l border-gray-800 h-full"> 
+            <h3 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2 mx-2 text-red-500">En tu biblioteca</h3>
             
-            <div className="flex-grow space-y-3 overflow-y-auto pr-1"> {/* Contenedor que permite el scroll interno */}
-              {/* Mapeamos 8 elementos simulados para "En tu biblioteca" */}
-              {LIBRARY_IMAGES.map((src, i) => ( // Usamos src para la imagen
-                  <div key={i} className="cursor-pointer hover:bg-gray-700/50 transition duration-150 rounded-lg">
-                      {/* Contenedor de la imagen */}
-                      <div className="w-full h-16 rounded-lg overflow-hidden shadow-lg bg-red-700/80"> 
-                          {/* CLAVE: Implementación de la imagen */}
-                          <img 
-                            src={src} 
-                            alt={`Carátula del juego ${i + 1}`}
-                            className="w-full h-full object-cover" 
-                            onError={(e) => { e.target.onerror = null; e.target.src=PLACEHOLDER_IMG }}
-                          />
-                      </div>
-                      
-                      {/* Simulación del texto (Solo para que se vea el G1, G2, etc. en la derecha) */}
-                      <div className="absolute inset-0 p-2 flex items-center">
-                          <span className="text-white font-bold text-sm">G{i + 1}</span>
-                          <span className="ml-3 text-sm">Juego {i + 1}</span>
-                      </div>
-                  </div>
-              ))}
-            </div>
-
-            <div className="pt-4 mt-4 border-t border-gray-700">
-                <a href="#" className="text-sm text-red-500 hover:text-red-400">Ver todos</a>
+            {/* Contenedor para el espaciado vertical */}
+            <div className="space-y-3 px-2"> 
+                {LIBRARY_IMAGES.map((src, i) => (
+                    <div key={i} className="cursor-pointer transform hover:scale-[1.05] transition duration-200 shadow-lg mx-auto">
+                        {/* El contenedor ahora es h-24 para mayor longitud */}
+                        <div className="w-full h-24 rounded-lg overflow-hidden shadow-lg"> 
+                            {/* IMPLEMENTACIÓN FINAL DE IMAGEN: ocupando todo el div padre */}
+                            <img 
+                                src={src} 
+                                alt={`Carátula del juego ${i + 1}`}
+                                className="w-full h-full object-cover"
+                                // Fallback placeholder para si la imagen no carga
+                                onError={(e) => { e.target.onerror = null; e.target.src=PLACEHOLDER_IMG }}
+                            />
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
 
       </div>
+
+      {/* MODAL DE FEEDBACK (Se muestra en la capa superior) */}
+      {/* <FeedbackModal isOpen={isFeedbackModalOpen} onClose={() => setIsFeedbackModalOpen(false)} /> */}
+
     </div>
   );
 }
