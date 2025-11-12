@@ -17,7 +17,7 @@
         <div className="relative bg-[#F5F5F5] rounded-xl shadow-2xl w-full max-w-md">
           
           <div className="p-4 border-b border-gray-700">
-            <h2 className="text-black font-bold">Envíanos tus comentarios</h2>
+            <h2 className="text-red-500 font-bold">Envíanos tus comentarios</h2>
             <p className="text-gray-500 mt-1">Describe el problema de forma detallada</p>
           </div>
 
