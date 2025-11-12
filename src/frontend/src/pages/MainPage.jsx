@@ -16,6 +16,20 @@ const MOCK_GAMES = [
     { title: "Bloody Bastards", subtitle: "Acción", rating: "4.6" },
 ];
 
+const GAME_COVERS = {
+    "Mobile Legends: Bang Bang": "https://images.unsplash.com/photo-1542385152-a5483a93a62f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Carátula de MLBB
+    "Wuthering Waves": "https://images.unsplash.com/photo-1627916694663-7e4e0d9b4c0e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Carátula estilo anime
+    "Geometry Dash Lite": "https://placehold.co/250x187/3498DB/FFF?text=GEOMETRY+DASH+LITE",
+    "Geometry Dash SubZero": "https://placehold.co/250x187/1ABC9C/FFF?text=GD+SUBZERO",
+    "Geometry Dash World": "https://placehold.co/250x187/E74C3C/FFF?text=GD+WORLD",
+    "Shadow Fight 4: Arena": "https://images.unsplash.com/photo-1594967396117-640f0c08b8b9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Mock de lucha
+    "Art of War 3: RTS estrategia": "https://images.unsplash.com/photo-1582218084534-114af9641c88?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Mock RTS
+    "Solo Leveling: Arise": "https://images.unsplash.com/photo-1583095627622-4916a2469a4e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Mock anime oscuro
+};
+
+// Función para obtener la ruta de la imagen, con fallback a PLACEHOLDER_IMG si no está mapeada.
+const getGameImagePath = (title) => GAME_COVERS[title] || PLACEHOLDER_IMG;
+
 const LIBRARY_IMAGES = [
     '/image1.svg',
     '/image2.svg',
@@ -28,23 +42,112 @@ const LIBRARY_IMAGES = [
 ];
 
 const PLACEHOLDER_IMG = "https://placehold.co/250x100/374151/FFF?text=GAME+IMAGE+FALLBACK";
+const FREEFIRE_IMAGE_PATH = '/image10.svg';
 
 const GameCard = ({ game, index }) => {
-    const bgColors = ['bg-blue-800', 'bg-red-800', 'bg-green-800', 'bg-purple-800', 'bg-cyan-800', 'bg-pink-800'];
-    const gameBg = index < bgColors.length ? bgColors[index] : 'bg-gray-800';
+    const gameImagePath = getGameImagePath(game.title);
 
     return (
-        <div className="bg-[#2B2D30] rounded-xl overflow-hidden cursor-pointer transform hover:scale-[1.03] transition duration-200 shadow-lg">
-            <div className={`h-40 ${gameBg} flex items-center justify-center text-white text-sm p-4`}>
-                <span className="text-center font-extrabold text-xs">{game.title}</span>
-            </div>
-            <div className="p-3 bg-[#1F2123]">
-                <h3 className="text-base font-bold text-white truncate">{game.title}</h3>
-                <p className="text-xs text-gray-400 mt-1">{game.rating} | {game.subtitle}</p>
+        <div className="rounded-xl overflow-hidden cursor-pointer transform hover:scale-[1.03] transition duration-200 shadow-xl bg-gray-900/50">
+            {/* Contenedor de la Imagen: Usamos aspect-[4/3] para el formato de carátula */}
+            <div className="relative w-full aspect-[4/3]"> 
+                <img 
+                    src={gameImagePath} 
+                    alt={`Carátula de ${game.title}`} 
+                    className="w-full h-full object-cover" 
+                    onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}
+                />
+
+                {/* Overlay Degradado en la parte inferior para legibilidad del texto */}
+                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent"></div>
+                
+                {/* Texto de Subtítulo y Rating */}
+                <div className="absolute bottom-0 left-0 p-3 text-white">
+                    <h3 className="text-sm font-bold truncate">{game.title}</h3>
+                    <p className="text-xs text-gray-400 mt-0.5">{game.rating} | {game.subtitle}</p>
+                </div>
             </div>
         </div>
     );
 };
+
+// --- NUEVO COMPONENTE DE DESCUENTO ESTILIZADO ---
+const FreeFireDiscountCard = () => {
+    // Definición de colores para el "neón"
+    const NEON_COLOR = '#FF0000'; // Verde azulado brillante
+
+        return (
+        <>
+            {/* INYECTAMOS EL CSS DE LA ANIMACIÓN FLOTANTE */}
+            <style jsx="true">{`
+                @keyframes float {
+                    0% { transform: translateY(0px); }
+                    50% { transform: translateY(-8px); } /* Sube 8px */
+                    100% { transform: translateY(0px); }
+                }
+
+                .floating-image {
+                    animation: float 4s ease-in-out infinite; /* Animación de 4s, suave, infinita */
+                }
+            `}</style>
+
+            <div className="bg-[#1F2123] rounded-2xl shadow-2xl p-6 md:p-10 mb-10 overflow-hidden relative border border-gray-900">
+                <div className="grid md:grid-cols-3 gap-8 items-center">
+                    {/* Lado Izquierdo: Texto y Botón */}
+                    <div className="col-span-2 space-y-3 pr-4">
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                            Obtén 15% de descuento en<br /><span style={{ color: NEON_COLOR }}>Free FireMax para PC</span>
+                        </h1>
+                        
+                        <button 
+                            className={`px-6 py-2 mt-4 text-sm font-semibold rounded-lg transition duration-200 
+                                border-2 border-transparent text-white
+                                hover:bg-opacity-10`}
+                            style={{ 
+                                borderColor: NEON_COLOR,
+                                boxShadow: `0 0 10px ${NEON_COLOR}, inset 0 0 5px ${NEON_COLOR}`,
+                                backgroundColor: 'transparent',
+                            }}
+                        >
+                            Guardar
+                        </button>
+
+                        <p className="text-xs text-gray-400 pt-2">
+                            Hasta S/ 55 de ahorro. Aplica el descuento a más tardar el 18 de noviembre de 2025.
+                        </p>
+                    </div>
+
+                    {/* Lado Derecho: Imagen Estilizada */}
+                    <div className="col-span-1 flex justify-center items-center relative min-h-[150px]">
+                        {/* Contenedor de la Imagen con efecto "Neon Frame" y la clase de animación */}
+                        <div className="p-1 rounded-xl floating-image" // APLICAMOS LA CLASE DE ANIMACIÓN AQUÍ
+                            style={{
+                                backgroundImage: `linear-gradient(45deg, ${NEON_COLOR} 0%, #FF4500 100%)`, // Degradado de rojo a naranja rojizo
+                                filter: `drop-shadow(0 0 10px ${NEON_COLOR})`,
+                            }}
+                        >
+                            <div className="relative rounded-xl overflow-hidden bg-gray-900 border border-gray-800">
+                                {/* Icono de Plataforma (PC) - similar al controlador de Sonic */}
+                                <div className="absolute top-2 right-2 p-1.5 bg-gray-800/80 backdrop-blur-sm rounded-full"
+                                    style={{ boxShadow: `0 0 5px ${NEON_COLOR}` }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={NEON_COLOR} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-monitor-dot"><circle cx="12" cy="12" r="1"/><rect width="20" height="15" x="2" y="3" rx="2"/><path d="M12 19v3"/><path d="M5 22h14"/></svg>
+                                </div>
+
+                                <img 
+                                    src={FREEFIRE_IMAGE_PATH} 
+                                    alt="Personajes de Free Fire Max" 
+                                    className="w-full h-auto object-cover max-h-48 md:max-h-64 rounded-xl"
+                                    onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+// --- FIN DEL NUEVO COMPONENTE ---
 
 const LibraryPage = () => {
     const FULL_LIBRARY_IMAGES = [
@@ -112,20 +215,9 @@ function MainPage() {
             default:
                 return (
                     <div className="p-7 pt-20">
-                        <div className="mb-10 p-5 bg-[#2B2D30] rounded-xl shadow-lg border border-white">
-                            <div className="flex justify-between items-center">
-                                <p className="text-xl font-semibold">
-                                    Obtén 15% de descuento en Free Fire Max para PC
-                                </p>
-                                <button className="px-4 py-1 border bg-red-600 text-sm rounded-lg hover:bg-red-800 transition duration-150">
-                                    Guardar
-                                </button>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-2">Hasta el 16 de noviembre de 2025.</p>
-                        </div>
-
+                        <FreeFireDiscountCard />
                         <h2 className="text-2xl font-bold mb-5">Recomendados para ti</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
                             {MOCK_GAMES.map((game, index) => (
                                 <GameCard key={index} game={game} index={index} />
                             ))}
