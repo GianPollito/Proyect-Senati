@@ -27,6 +27,8 @@ const GAME_COVERS = {
     "Bloody Bastards": "/image18.svg",
 };
 
+const WUTHERING_WAVES_COVER = "https://images.unsplash.com/photo-1627916694663-7e4e0d9b4c0e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
 // Función para obtener la ruta de la imagen, con fallback a PLACEHOLDER_IMG si no está mapeada.
 const getGameImagePath = (title) => GAME_COVERS[title] || PLACEHOLDER_IMG;
 
@@ -43,6 +45,9 @@ const LIBRARY_IMAGES = [
 
 const PLACEHOLDER_IMG = "https://placehold.co/250x100/374151/FFF?text=GAME+IMAGE+FALLBACK";
 const FREEFIRE_IMAGE_PATH = '/image10.svg';
+
+const WUTHERING_WAVES_BANNER_IMAGE = "/image12.svg"; // <--- Tu imagen grande (image12.svg)
+const WUTHERING_WAVES_ICON = "/image19.svg"; // <--- Tu imagen pequeña (image19.svg)
 
 const GameCard = ({ game, index }) => {
     const gameImagePath = getGameImagePath(game.title);
@@ -77,6 +82,55 @@ const GameCard = ({ game, index }) => {
         </div>
     );
 };
+
+const FeaturedBanner = () => (
+    <div className="bg-[#1F2123] rounded-2xl shadow-2xl p-6 md:p-10 mt-10 mb-10 overflow-hidden relative border border-gray-900 h-45">
+        <div className="grid grid-cols-5 h-full">
+            {/* Lado Izquierdo: Texto y Detalles */}
+            <div className="col-span-3 flex flex-col justify-center relative z-10">
+                <p className="text-xs text-gray-400 mb-1">Kuro Games</p>
+                <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-4">
+                    Sé el héroe de un<br />nuevo amanecer
+                </h1>
+                
+                {/* Miniatura y Título del Juego */}
+                <div className="flex items-center space-x-3 mb-4">
+                    <img src={WUTHERING_WAVES_ICON} alt="Wuthering Waves Icon" className="w-10 h-10 rounded-lg object-cover" onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}/>
+                    <div>
+                        <p className="text-base font-bold text-white leading-none">Wuthering Waves</p>
+                        <p className="text-xs text-gray-400">Juegos de rol</p>
+                    </div>
+                </div>
+
+                {/* Estadísticas (Rating, Downloads, etc.) */}
+                <div className="flex space-x-4 text-xs text-gray-400">
+                    <div className="flex items-center">
+                        <svg className="w-3 h-3 text-yellow-400 mr-1" fill="#FFD700" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.178 3.614a1 1 0 00.95.691h3.805c.969 0 1.371 1.24.588 1.81l-3.082 2.242a1 1 0 00-.364 1.118l1.178 3.614c.3.921-.755 1.688-1.541 1.118l-3.082-2.242a1 1 0 00-1.178 0l-3.082 2.242c-.786.57-1.841-.197-1.541-1.118l1.178-3.614a1 1 0 00-.364-1.118L2.012 9.042c-.783-.57-.381-1.81.588-1.81h3.805a1 1 0 00.95-.691l1.178-3.614z"/></svg>
+                        4.5 <span className="ml-1 text-gray-500">★</span>
+                    </div>
+                    <div className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        1M+ <span className="ml-1 text-gray-500">Descargas</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Lado Derecho: Ilustración del Personaje */}
+            <div className="col-span-2 relative h-full overflow-hidden rounded-lg">
+                <div className="absolute inset-0 bg-cover bg-center" 
+                    style={{ 
+                        backgroundImage: `url(${WUTHERING_WAVES_BANNER_IMAGE})`,
+                        // Usa clip-path para lograr el corte inclinado a la izquierda
+                        clipPath: 'polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)',
+                    }}
+                    onError={(e) => { e.target.onerror = null; e.target.style.backgroundImage = `url(${PLACEHOLDER_IMG})` }}
+                ></div>
+                {/* Overlay sutil para oscurecer la imagen y mejorar el contraste con el texto de la izquierda (opcional) */}
+                <div className="absolute inset-0 bg-gradient-to-l from-black/5 to-black/80"></div>
+            </div>
+        </div>
+    </div>
+);
 
 // --- NUEVO COMPONENTE DE DESCUENTO ESTILIZADO ---
 const FreeFireDiscountCard = () => {
@@ -223,12 +277,15 @@ function MainPage() {
                 return (
                     <div className="p-7 pt-20">
                         <FreeFireDiscountCard />
+                        
                         <h2 className="text-2xl font-bold mb-5">Recomendados para ti</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
                             {MOCK_GAMES.map((game, index) => (
                                 <GameCard key={index} game={game} index={index} />
                             ))}
                         </div>
+
+                        <FeaturedBanner /> {/* <--- AÑADIDO AQUÍ (después de la cuadrícula) */}
                         <div className="h-96"></div>
                     </div>
                 );
