@@ -3,3 +3,19 @@
 @tailwind components;
 
 @tailwind utilities;
+
+@keyframes float-banner {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float-banner {
+    animation: float-banner 5s ease-in-out infinite;
+}

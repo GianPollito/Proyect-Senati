@@ -281,56 +281,57 @@ const PCStrategyGamesSection = () => (
 );
 
 const CallToActionBanner = () => {
-    // ESTILOS Y ESTADO ACTUALIZADOS PARA EL HOVER DEL BOTÓN
-    const NEON_COLOR = '#FF0000';
-    const NEON_HOVER_COLOR = '#8b000017'; // Color más oscuro para el hover
-    const [isHovered, setIsHovered] = useState(false); // 1. Nuevo estado para el hover
-    
-    // Calcula el color actual del fondo del botón
-    const currentBgColor = isHovered ? NEON_HOVER_COLOR : NEON_COLOR;
+    // ESTILOS Y ESTADO ACTUALIZADOS PARA EL HOVER DEL BOTÓN
+    const NEON_COLOR = '#FF0000';
+    const NEON_HOVER_COLOR = '#8b000017'; // Color más oscuro para el hover
+    const [isHovered, setIsHovered] = useState(false); // 1. Nuevo estado para el hover
+        
+    // Calcula el color actual del fondo del botón
+    const currentBgColor = isHovered ? NEON_HOVER_COLOR : NEON_COLOR;
 
-    return (
-        <div className="p-0 pt-10 mb-5"> 
-            <div 
-                className="relative bg-[#121212] text-white rounded-[4rem] p-10 md:p-20 overflow-hidden 
-                            flex items-center justify-start "
-                style={{
-                    border: `1px solid ${NEON_COLOR}`,
-                    filter: `drop-shadow(0 0 0px rgba(255, 0, 0, 1))`,
-                }}
-            >
-                <div 
-                    className="absolute inset-0 opacity-50 pointer-events-none" 
-                    style={{
-                        background: `radial-gradient(circle at 100% 0%, rgba(255, 0, 0, 1), transparent 50%)`,
-                        mixBlendMode: 'screen',
-                    }}
-                />
+    return (
+        <div className="p-0 pt-10 mb-5"> 
+            <div 
+                className="relative bg-[#121212] text-white rounded-[4rem] p-10 md:p-20 overflow-hidden 
+                            flex items-center justify-start 
+                             animate-float-banner" // <--- CLASE CSS GLOBAL APLICADA
+                style={{
+                    border: `1px solid ${NEON_COLOR}`,
+                    filter: `drop-shadow(0 0 0px rgba(255, 0, 0, 1))`,
+                }}
+            >
+                <div 
+                    className="absolute inset-0 opacity-50 pointer-events-none" 
+                    style={{
+                        background: `radial-gradient(circle at 100% 0%, rgba(255, 0, 0, 1), transparent 50%)`,
+                        mixBlendMode: 'screen',
+                    }}
+                />
 
-                <div className="relative z-10 max-w-2xl">
-                    <p className="text-sm text-gray-400 mb-2">Encuentra tu nuevo juego favorito</p>
-                    <h2 className="text-5xl md:text-6xl font-black leading-tight mb-8">
-                        Consulta todos <br/>nuestros juegos
-                    </h2>
-                    
-                    <button 
-                        // 2. Control de eventos de mouse
-                        onMouseEnter={() => setIsHovered(true)} 
-                        onMouseLeave={() => setIsHovered(false)}
-                        className="px-8 py-3 text-lg font-bold rounded-xl transition duration-300 
-                                    text-white"
-                        style={{
-                            // 3. Uso del color dinámico para el fondo
-                            backgroundColor: currentBgColor,
-                            boxShadow: `0 0 15px ${NEON_COLOR}, 0 0 30px ${NEON_COLOR}`,
-                        }}
-                    >
-                        Ver
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
+                <div className="relative z-10 max-w-2xl">
+                    <p className="text-sm text-gray-400 mb-2">Encuentra tu nuevo juego favorito</p>
+                    <h2 className="text-5xl md:text-6xl font-black leading-tight mb-8">
+                        Consulta todos <br/>nuestros juegos
+                    </h2>
+                    
+                    <button 
+                        // 2. Control de eventos de mouse
+                        onMouseEnter={() => setIsHovered(true)} 
+                        onMouseLeave={() => setIsHovered(false)}
+                        className="px-8 py-3 text-lg font-bold rounded-xl transition duration-300 
+                                    text-white"
+                        style={{
+                            // 3. Uso del color dinámico para el fondo
+                            backgroundColor: currentBgColor,
+                            boxShadow: `0 0 0px ${NEON_COLOR}, 0 0 30px ${NEON_COLOR}`,
+                        }}
+                    >
+                        Ver
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const FeaturedBanner = () => (
