@@ -93,7 +93,7 @@ function Login() {
         <form onSubmit={handleSubmit} className="space-y-6">
           
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-black-300 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-black mb-1">
               Correo Electrónico
             </label>
             <input
@@ -110,7 +110,7 @@ function Login() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-black-300 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-black mb-1">
               Contraseña
             </label>
             <input

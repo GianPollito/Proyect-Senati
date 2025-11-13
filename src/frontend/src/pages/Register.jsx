@@ -90,7 +90,7 @@ function Register() {
         <form onSubmit={handleSubmit} className="space-y-6">
           
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-black-300 mb-1">
+            <label htmlFor="name" className="block text-sm font-medium text-black mb-1">
               Nombre
             </label>
             <input
@@ -107,7 +107,7 @@ function Register() {
           </div>
           
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-black-300 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-black mb-1">
               Correo Electrónico
             </label>
             <input
@@ -124,7 +124,7 @@ function Register() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-black-300 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-black mb-1">
               Contraseña
             </label>
             <input

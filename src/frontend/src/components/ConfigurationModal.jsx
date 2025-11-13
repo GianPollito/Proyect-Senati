@@ -51,7 +51,7 @@ function ConfigurationModal({ isOpen, onClose }) {
               <h2 className="text-lg font-semibold mb-4 text-[#FF0000]">Cuenta</h2>
               
               <div className="flex justify-between items-center py-4">
-                <span className="text-gray-300 text-sm">Estado</span>
+                <span className="text-black text-sm">Estado</span>
                 <span className="text-green-400 font-medium text-sm">Autenticado</span>
               </div>
               

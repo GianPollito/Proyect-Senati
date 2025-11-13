@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import { useState } from 'react'; 
 import { useAuth } from '../context/AuthProvider'; 
 import { useNavigate } from 'react-router-dom';
 import DownloadsPopup from '../components/DownloadsPopup';
@@ -16,6 +16,17 @@ const MOCK_GAMES = [
     { title: "Bloody Bastards", subtitle: "Acción", rating: "4.6" },
 ];
 
+const CASUAL_GAMES = [
+    { title: "Star Chef 2: Juego culinario", subtitle: "Simulación", rating: "4.4", icon: "/image21.svg" },
+    { title: "Casa Adorable", subtitle: "Simulación", rating: "4.1", icon: "/image24.svg" },
+    { title: "Taonga Island Adventure: Farm", subtitle: "Farm", rating: "4.3", icon: "/image22.svg" },
+    { title: "PickCrafter - Idle Craft Game", subtitle: "Simulación", rating: "4.5", icon: "/image25.svg" },
+    { title: "KPop Reinas Ídolos", subtitle: "Simulación", rating: "4.5", icon: "/image23.svg" },
+    { title: "¡Jumo Clicker!", subtitle: "Simulación", rating: "4.7", icon: "/image26.svg" },
+];
+
+const getCasualGameIcon = (iconPath) => iconPath || PLACEHOLDER_IMG;
+
 const GAME_COVERS = {
     "Mobile Legends: Bang Bang": "/image11.svg", 
     "Wuthering Waves": "/image12.svg", 
@@ -27,10 +38,10 @@ const GAME_COVERS = {
     "Bloody Bastards": "/image18.svg",
 };
 
-const WUTHERING_WAVES_COVER = "https://images.unsplash.com/photo-1627916694663-7e4e0d9b4c0e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-
 // Función para obtener la ruta de la imagen, con fallback a PLACEHOLDER_IMG si no está mapeada.
 const getGameImagePath = (title) => GAME_COVERS[title] || PLACEHOLDER_IMG;
+
+
 
 const LIBRARY_IMAGES = [
     '/image1.svg',
@@ -48,6 +59,9 @@ const FREEFIRE_IMAGE_PATH = '/image10.svg';
 
 const WUTHERING_WAVES_BANNER_IMAGE = "/image12.svg"; // <--- Tu imagen grande (image12.svg)
 const WUTHERING_WAVES_ICON = "/image19.svg"; // <--- Tu imagen pequeña (image19.svg)
+
+const FARM_HEROES_BANNER = "/image20.svg"; // Mock del perro grande
+const FARM_HEROES_ICON = "/image21.svg"; // Mock del ícono pequeño de Farm Heroes
 
 const GameCard = ({ game, index }) => {
     const gameImagePath = getGameImagePath(game.title);
@@ -83,10 +97,78 @@ const GameCard = ({ game, index }) => {
     );
 };
 
+const GameListItem = ({ game }) => (
+    <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800 transition duration-150 cursor-pointer">
+        {/* Ícono del juego */}
+        <img src={getCasualGameIcon(game.icon)} alt={game.title} className="w-10 h-10 rounded-lg object-cover" onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}/>
+        
+        {/* Título y Subtítulo */}
+        <div className="flex-grow">
+            <p className="text-sm font-semibold text-white truncate">{game.title}</p>
+            <div className="flex items-center text-xs text-gray-400 mt-0.5">
+                <svg className="w-3 h-3 text-yellow-400 mr-1" fill="#FFD700" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.178 3.614a1 1 0 00.95.691h3.805c.969 0 1.371 1.24.588 1.81l-3.082 2.242a1 1 0 00-.364 1.118l1.178 3.614c.3.921-.755 1.688-1.541 1.118l-3.082-2.242a1 1 0 00-1.178 0l-3.082 2.242c-.786.57-1.841-.197-1.541-1.118l1.178-3.614a1 1 0 00-.364-1.118L2.012 9.042c-.783-.57-.381-1.81.588-1.81h3.805a1 1 0 00.95-.691l1.178-3.614z"/></svg>
+                {game.rating} | {game.subtitle}
+            </div>
+        </div>
+    </div>
+);
+
+const CategoryGrid = () => (
+    <div className="pt-6 mb-20">
+        <h2 className="text-2xl font-bold mb-5 pt-0">Vivir en una simulación</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* Columna Izquierda: Banner Grande (Farm Heroes Saga) - CORRECCIÓN DEFINITIVA */}
+            <div className="relative col-span-1 bg-[#1F2123] rounded-2xl p-6 shadow-2xl overflow-hidden h-70">
+                
+                {/* Contenido de Texto (Posicionado Arriba a la Izquierda) */}
+                <div className="relative z-10 flex flex-col justify-start">
+                    <p className="text-2xl font-bold text-white mb-2">Farm Heroes Saga</p>
+                    <div className="flex items-center text-sm text-gray-400">
+                        4.6 <span className="ml-1 mr-2">★</span> | Casuales
+                    </div>
+                </div>
+
+                {/* IMAGEN DE FONDO CON CORTE DIAGONAL Y POSICIONAMIENTO CLAVE */}
+                <div className="absolute inset-0 z-0"
+                    style={{
+                        backgroundImage: `url(${FARM_HEROES_BANNER})`,
+                        backgroundRepeat: 'no-repeat',
+                        // Tamaño grande para que los personajes llenen el área
+                        backgroundSize: '100%', // Ajuste de zoom
+                        // Posicionamiento para centrar el perro y el cerdo
+                        backgroundPosition: '50% 50%',
+                        /* CORTE DIAGONAL PRECISO: Deja la esquina superior izquierda oscura. */
+                        clipPath: 'polygon(40% 0%, 100% 0%, 100% 100%, 25% 100%)',
+                    }}
+                ></div>
+                
+                {/* Overlay Oscuro para asegurar que el texto sea legible en la esquina superior izquierda */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#1F2123] to-transparent z-0"
+                     style={{ clipPath: 'polygon(0% 0%, 0% 100%, 25% 100%, 0% 100%)' }}
+                ></div>
+
+            </div>
+
+            {/* Columna Derecha: Lista Vertical (Experiencias envolventes) */}
+            <div className="bg-[#1F2123] rounded-2xl p-6 shadow-2xl">
+                <h3 className="text-2xl font-bold text-white mb-12">Experiencias envolventes</h3>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                    {CASUAL_GAMES.map((game, index) => (
+                        <GameListItem key={index} game={game} />
+                    ))}
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
 const FeaturedBanner = () => (
-    <div className="bg-[#1F2123] rounded-2xl shadow-2xl p-6 md:p-10 mt-10 mb-10 overflow-hidden relative border border-gray-900 h-45">
+    // Contenedor principal: mismo estilo que FreeFireDiscountCard + altura fija h-64
+    <div className="bg-[#1F2123] rounded-2xl shadow-2xl p-6 md:p-10 mt-20 mb-10 overflow-hidden relative border border-gray-900 h-90">
         <div className="grid grid-cols-5 h-full">
-            {/* Lado Izquierdo: Texto y Detalles */}
+            {/* Lado Izquierdo: Texto y Detalles (3/5 del ancho) */}
             <div className="col-span-3 flex flex-col justify-center relative z-10">
                 <p className="text-xs text-gray-400 mb-1">Kuro Games</p>
                 <h1 className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-4">
@@ -95,6 +177,7 @@ const FeaturedBanner = () => (
                 
                 {/* Miniatura y Título del Juego */}
                 <div className="flex items-center space-x-3 mb-4">
+                    {/* Usamos image19.svg para el ícono del juego */}
                     <img src={WUTHERING_WAVES_ICON} alt="Wuthering Waves Icon" className="w-10 h-10 rounded-lg object-cover" onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}/>
                     <div>
                         <p className="text-base font-bold text-white leading-none">Wuthering Waves</p>
@@ -102,31 +185,58 @@ const FeaturedBanner = () => (
                     </div>
                 </div>
 
-                {/* Estadísticas (Rating, Downloads, etc.) */}
-                <div className="flex space-x-4 text-xs text-gray-400">
-                    <div className="flex items-center">
-                        <svg className="w-3 h-3 text-yellow-400 mr-1" fill="#FFD700" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.178 3.614a1 1 0 00.95.691h3.805c.969 0 1.371 1.24.588 1.81l-3.082 2.242a1 1 0 00-.364 1.118l1.178 3.614c.3.921-.755 1.688-1.541 1.118l-3.082-2.242a1 1 0 00-1.178 0l-3.082 2.242c-.786.57-1.841-.197-1.541-1.118l1.178-3.614a1 1 0 00-.364-1.118L2.012 9.042c-.783-.57-.381-1.81.588-1.81h3.805a1 1 0 00.95-.691l1.178-3.614z"/></svg>
-                        4.5 <span className="ml-1 text-gray-500">★</span>
+                {/* --- BLOQUE DE ESTADÍSTICAS MODIFICADO (grid-cols-3) --- */}
+                {/* Se cambió de un simple 'flex' a un 'grid' de 3 columnas para alinear los bloques verticalmente. */}
+                <div className="grid grid-cols-3 gap-2 text-xs text-gray-400">
+                    <div className="flex flex-col items-start justify-center">
+                         {/* Calificación: Se añadió texto secundario (reseñas) */}
+                        <div className="flex items-center text-sm font-bold text-white">
+                            <svg className="w-3 h-3 text-yellow-400 mr-1" fill="#ff9900ff" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.178 3.614a1 1 0 00.95.691h3.805c.969 0 1.371 1.24.588 1.81l-3.082 2.242a1 1 0 00-.364 1.118l1.178 3.614c.3.921-.755 1.688-1.541 1.118l-3.082-2.242a1 1 0 00-1.178 0l-3.082 2.242c-.786.57-1.841-.197-1.541-1.118l1.178-3.614a1 1 0 00-.364-1.118L2.012 9.042c-.783-.57-.381-1.81.588-1.81h3.805a1 1 0 00.95-.691l1.178-3.614z"/></svg>
+                            4.5 <span className="ml-1 text-gray-500">★</span>
+                        </div>
+                        <p className="text-gray-500 mt-1">131 mil reseñas</p> 
                     </div>
-                    <div className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        1M+ <span className="ml-1 text-gray-500">Descargas</span>
+
+                    {/* Descargas: Se añadió texto secundario */}
+                    <div className="flex flex-col items-start justify-center">
+                        <div className="text-sm font-bold text-white">
+                            1M+
+                        </div>
+                        <p className="text-gray-500 mt-1">Descargas</p>
+                    </div>
+
+                    {/* Clasificación de edad: Se añadió texto secundario y el borde del número */}
+                    <div className="flex flex-col items-start justify-center">
+                        <div className="text-sm font-bold text-white">
+                            <div className="border border-gray-500 text-gray-400 p-0.5 rounded-sm">
+                                13+
+                            </div>
+                        </div>
+                        <p className="text-gray-500 mt-1">Para mayores de 13 años</p>
                     </div>
                 </div>
+
+                {/* Descripción Adicional [AÑADIDO] */}
+                {/* Este bloque es el que estaba faltando en tu implementación anterior. */}
+                <p className="text-xs text-gray-500 mt-4">
+                    [Campo Comandante] Robadon! Urek Mazino <br />
+                    Invocación de llegada devuelve.
+                </p>
+
             </div>
 
-            {/* Lado Derecho: Ilustración del Personaje */}
+            {/* Lado Derecho: Ilustración del Personaje (2/5 del ancho) */}
             <div className="col-span-2 relative h-full overflow-hidden rounded-lg">
                 <div className="absolute inset-0 bg-cover bg-center" 
                     style={{ 
-                        backgroundImage: `url(${WUTHERING_WAVES_BANNER_IMAGE})`,
-                        // Usa clip-path para lograr el corte inclinado a la izquierda
+                        backgroundImage: `url(${WUTHERING_WAVES_BANNER_IMAGE})`, 
+                        // ESTE ES EL CÓDIGO CLAVE PARA EL CORTE DIAGONAL:
                         clipPath: 'polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)',
                     }}
                     onError={(e) => { e.target.onerror = null; e.target.style.backgroundImage = `url(${PLACEHOLDER_IMG})` }}
                 ></div>
                 {/* Overlay sutil para oscurecer la imagen y mejorar el contraste con el texto de la izquierda (opcional) */}
-                <div className="absolute inset-0 bg-gradient-to-l from-black/5 to-black/80"></div>
+                <div className="absolute inset-0 bg-gradient-to-l from-black/5"></div>
             </div>
         </div>
     </div>
@@ -207,7 +317,8 @@ const FreeFireDiscountCard = () => {
             </div>
         </>
     );
-};
+}
+
 // --- FIN DEL NUEVO COMPONENTE ---
 
 const LibraryPage = () => {
@@ -278,7 +389,7 @@ function MainPage() {
                     <div className="p-7 pt-20">
                         <FreeFireDiscountCard />
                         
-                        <h2 className="text-2xl font-bold mb-5">Recomendados para ti</h2>
+                        <h2 className="text-2xl font-bold mb-5 pt-6">Recomendados para ti</h2>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
                             {MOCK_GAMES.map((game, index) => (
                                 <GameCard key={index} game={game} index={index} />
@@ -286,6 +397,7 @@ function MainPage() {
                         </div>
 
                         <FeaturedBanner /> {/* <--- AÑADIDO AQUÍ (después de la cuadrícula) */}
+                        <CategoryGrid />
                         <div className="h-96"></div>
                     </div>
                 );
