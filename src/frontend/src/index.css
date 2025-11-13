@@ -15,7 +15,6 @@
         transform: translateY(0px);
     }
 }
-
 .animate-float-banner {
     animation: float-banner 5s ease-in-out infinite;
 }
