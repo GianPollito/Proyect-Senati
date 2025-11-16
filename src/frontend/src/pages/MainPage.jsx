@@ -11,9 +11,9 @@ import Library from './Library';
 
 const PLACEHOLDER_IMG = "https://placehold.co/250x100/374151/FFF?text=GAME+IMAGE+FALLBACK";
 const FREEFIRE_IMAGE_PATH = '/image10.svg';
-const WUTHERING_WAVES_BANNER_IMAGE = "/image12.svg"; 
-const WUTHERING_WAVES_ICON = "/image19.svg"; 
-const FARM_HEROES_BANNER = "/image20.svg"; 
+const WUTHERING_WAVES_BANNER_IMAGE = '/image12.svg'; 
+const WUTHERING_WAVES_ICON = '/image19.svg'; 
+const FARM_HEROES_BANNER = '/image20.svg'; 
 
 const MOCK_GAMES = [
     { title: "Mobile Legends: Bang Bang", subtitle: "MOBA", rating: "4.0" },
@@ -21,7 +21,6 @@ const MOCK_GAMES = [
     { title: "Geometry Dash Lite", subtitle: "Arcade", rating: "4.3" },
     { title: "Lichess", subtitle: "Mesa", rating: "3.8" },
     { title: "Geometry Dash SubZero", subtitle: "Arcade/SubZero", rating: "4.4" },
-    { title: "Geometry Dash World", subtitle: "Arcade", rating: "4.3" },
     { title: "BombSquad", subtitle: "Fiesta", rating: "4.8" },
     { title: "Bloody Bastards", subtitle: "Acción", rating: "4.6" },
 ];
@@ -511,12 +510,19 @@ function MainPage() {
     const handleDownloadsClick = () => setIsDownloadsOpen(!isDownloadsOpen);
     const handleFeedbackClick = () => setIsFeedbackOpen(true);
 
+    // NUEVO HANDLER: Abre la URL de Google Play en una nueva pestaña
+    const handleHistoryClick = () => {
+        const googlePlayUrl = `https://play.google.com/store/account/orderhistory?hl=es&gl=US`;
+        console.log("Redirigiendo a Historial de Pedidos de Google Play...");
+        window.open(googlePlayUrl, '_blank'); 
+    };
+
     const renderContent = () => {
         switch (activeSection) {
             case 'search': return <SearchPage />;
             case 'games': return <GamesPage />;
-            // Llama al componente externo Library
-            case 'library': return <Library />; 
+            // MODIFICACIÓN CLAVE: Llama a Library y le pasa la función handleHistoryClick
+            case 'library': return <Library onHistoryClick={handleHistoryClick} />; 
             default:
                 return (
                     <div className="p-7 pt-20">
