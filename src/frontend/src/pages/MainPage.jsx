@@ -3,7 +3,11 @@ import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import DownloadsPopup from '../components/DownloadsPopup';
 import FeedbackModal from '../components/FeedbackModal';
+// Importación del nuevo componente de Biblioteca
+import Library from './Library'; 
 
+
+// --- CONSTANTES Y DATOS DE MOCK ---
 
 const PLACEHOLDER_IMG = "https://placehold.co/250x100/374151/FFF?text=GAME+IMAGE+FALLBACK";
 const FREEFIRE_IMAGE_PATH = '/image10.svg';
@@ -105,10 +109,13 @@ const GAME_COVERS = {
 const getCasualGameIcon = (iconPath) => iconPath || PLACEHOLDER_IMG;
 const getGameImagePath = (title) => GAME_COVERS[title] || PLACEHOLDER_IMG;
 
+// CONSTANTE REQUERIDA PARA LA BARRA LATERAL DERECHA (NO TOCADA)
 const LIBRARY_IMAGES = [
     '/image1.svg', '/image2.svg', '/image3.svg', '/image4.svg',
     '/image5.svg', '/image6.svg', '/image7.svg', '/image8.svg',
 ];
+
+// --- COMPONENTES AUXILIARES ---
 
 const StarIcon = () => (
     <svg className="w-3 h-3 text-yellow-400 mr-1" fill="#ff9900ff" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -281,57 +288,52 @@ const PCStrategyGamesSection = () => (
 );
 
 const CallToActionBanner = () => {
-    // ESTILOS Y ESTADO ACTUALIZADOS PARA EL HOVER DEL BOTÓN
-    const NEON_COLOR = '#FF0000';
-    const NEON_HOVER_COLOR = '#8b000017'; // Color más oscuro para el hover
-    const [isHovered, setIsHovered] = useState(false); // 1. Nuevo estado para el hover
-        
-    // Calcula el color actual del fondo del botón
-    const currentBgColor = isHovered ? NEON_HOVER_COLOR : NEON_COLOR;
+    const NEON_COLOR = '#FF0000';
+    const NEON_HOVER_COLOR = '#8b000017'; 
+    const [isHovered, setIsHovered] = useState(false); 
+    const currentBgColor = isHovered ? NEON_HOVER_COLOR : NEON_COLOR;
 
-    return (
-        <div className="p-0 pt-10 mb-5"> 
-            <div 
-                className="relative bg-[#121212] text-white rounded-[4rem] p-10 md:p-20 overflow-hidden 
-                            flex items-center justify-start 
-                             animate-float-banner" // <--- CLASE CSS GLOBAL APLICADA
-                style={{
-                    border: `1px solid ${NEON_COLOR}`,
-                    filter: `drop-shadow(0 0 0px rgba(255, 0, 0, 1))`,
-                }}
-            >
-                <div 
-                    className="absolute inset-0 opacity-50 pointer-events-none" 
-                    style={{
-                        background: `radial-gradient(circle at 100% 0%, rgba(255, 0, 0, 1), transparent 50%)`,
-                        mixBlendMode: 'screen',
-                    }}
-                />
+    return (
+        <div className="p-0 pt-10 mb-5"> 
+            <div 
+                className="relative bg-[#121212] text-white rounded-[4rem] p-10 md:p-20 overflow-hidden 
+                            flex items-center justify-start 
+                             animate-float-banner" 
+                style={{
+                    border: `1px solid ${NEON_COLOR}`,
+                    filter: `drop-shadow(0 0 0px rgba(255, 0, 0, 1))`,
+                }}
+            >
+                <div 
+                    className="absolute inset-0 opacity-50 pointer-events-none" 
+                    style={{
+                        background: `radial-gradient(circle at 100% 0%, rgba(255, 0, 0, 1), transparent 50%)`,
+                        mixBlendMode: 'screen',
+                    }}
+                />
 
-                <div className="relative z-10 max-w-2xl">
-                    <p className="text-sm text-gray-400 mb-2">Encuentra tu nuevo juego favorito</p>
-                    <h2 className="text-5xl md:text-6xl font-black leading-tight mb-8">
-                        Consulta todos <br/>nuestros juegos
-                    </h2>
-                    
-                    <button 
-                        // 2. Control de eventos de mouse
-                        onMouseEnter={() => setIsHovered(true)} 
-                        onMouseLeave={() => setIsHovered(false)}
-                        className="px-8 py-3 text-lg font-bold rounded-xl transition duration-300 
-                                    text-white"
-                        style={{
-                            // 3. Uso del color dinámico para el fondo
-                            backgroundColor: currentBgColor,
-                            boxShadow: `0 0 0px ${NEON_COLOR}, 0 0 30px ${NEON_COLOR}`,
-                        }}
-                    >
-                        Ver
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
+                <div className="relative z-10 max-w-2xl">
+                    <p className="text-sm text-gray-400 mb-2">Encuentra tu nuevo juego favorito</p>
+                    <h2 className="text-5xl md:text-6xl font-black leading-tight mb-8">
+                        Consulta todos <br/>nuestros juegos
+                    </h2>
+                    
+                    <button 
+                        onMouseEnter={() => setIsHovered(true)} 
+                        onMouseLeave={() => setIsHovered(false)}
+                        className="px-8 py-3 text-lg font-bold rounded-xl transition duration-300 
+                                     text-white"
+                        style={{
+                            backgroundColor: currentBgColor,
+                            boxShadow: `0 0 0px ${NEON_COLOR}, 0 0 30px ${NEON_COLOR}`,
+                        }}
+                    >
+                        Ver
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const FeaturedBanner = () => (
@@ -473,32 +475,6 @@ const FreeFireDiscountCard = () => {
     );
 }
 
-const LibraryPage = () => {
-    const FULL_LIBRARY_IMAGES = [
-        '/image1.svg', '/image2.svg', '/image3.svg', '/image4.svg',
-        '/image5.svg', '/image6.svg', '/image7.svg', '/image8.svg',
-        '/image9.svg', '/image10.svg', '/image11.svg', '/image12.svg',
-        '/image13.svg', '/image14.svg', '/image15.svg', '/image16.svg', 
-    ];
-
-    return (
-        <div className="p-6 h-full flex flex-col">
-            <h2 className="text-3xl font-bold mb-4 text-white">De tu biblioteca</h2>
-            <div className="flex-grow overflow-y-auto space-y-4 pr-2">
-                {FULL_LIBRARY_IMAGES.map((src, i) => (
-                    <div key={i} className="flex-1 min-h-0 w-full rounded-lg overflow-hidden shadow-xl cursor-pointer hover:opacity-90 transition duration-200">
-                        <img 
-                            src={src} 
-                            alt={`Juego ${i + 1}`} 
-                            className="w-full h-full" 
-                            onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}
-                        />
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
 
 const SearchPage = () => (
     <div className="p-10 text-center text-gray-400">
@@ -515,6 +491,8 @@ const GamesPage = () => (
     </div>
 );
 
+
+// --- COMPONENTE PRINCIPAL ---
 
 function MainPage() {
     const { logout } = useAuth(); 
@@ -537,7 +515,8 @@ function MainPage() {
         switch (activeSection) {
             case 'search': return <SearchPage />;
             case 'games': return <GamesPage />;
-            case 'library': return <LibraryPage />;
+            // Llama al componente externo Library
+            case 'library': return <Library />; 
             default:
                 return (
                     <div className="p-7 pt-20">
@@ -569,11 +548,21 @@ function MainPage() {
     const getIconClass = (section) => (
         activeSection === section ? 'text-red-500' : 'text-white hover:text-gray-400 active:text-gray-600'
     );
+    
+    // --- LÓGICA AGREGADA PARA OCULTAR BUSCADOR Y BARRA DERECHA ---
+    const hideSearch = activeSection === 'library'; 
+    const hideRightBar = activeSection === 'library'; 
+
+    // Define el layout del grid: Si la barra derecha se oculta, solo quedan dos columnas.
+    const gridLayout = hideRightBar ? "grid-cols-[90px_1fr]" : "grid-cols-[90px_1fr_250px]";
+    // --- FIN DE LA LÓGICA AGREGADA ---
 
     return (
         <div className="h-screen bg-[#1F2123] text-white font-sans overflow-hidden relative">
-            <div className="grid grid-cols-[90px_1fr_250px] h-full"> 
+            {/* USAMOS LA VARIABLE gridLayout PARA EL DISEÑO */}
+            <div className={`grid ${gridLayout} h-full`}> 
                     
+                {/* BARRA LATERAL IZQUIERDA */}
                 <div className="bg-[#1F2123] pt-4 pb-4 flex flex-col items-center border-r border-gray-800 h-full relative">
                         
                     <div className="flex flex-col items-center mb-8" onClick={handleLogout}>
@@ -612,14 +601,19 @@ function MainPage() {
                     <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
                 </div>
 
+                {/* CONTENIDO PRINCIPAL Y BUSCADOR */}
                 <div className="bg-[#121212] overflow-y-auto h-full">
-                    <header className="p-6 pb-2 sticky top-0 z-30 bg-[#121212]">
-                        <input 
-                            type="text" 
-                            placeholder="Buscar juegos y contenido..."
-                            className="w-full bg-[#2B2D30] text-gray-300 px-4 py-2 rounded-lg border border-gray-700 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                        />
-                    </header>
+                    
+                    {/* ENCABEZADO Y BUSCADOR (CONDICIONAL: Oculto en 'library') */}
+                    {!hideSearch && ( 
+                        <header className="p-6 pb-2 sticky top-0 z-30 bg-[#121212]">
+                            <input 
+                                type="text" 
+                                placeholder="Buscar juegos y contenido..."
+                                className="w-full bg-[#2B2D30] text-gray-300 px-4 py-2 rounded-lg border border-gray-700 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                            />
+                        </header>
+                    )}
 
                     {activeSection === 'home' && (
                         <div className="relative bg-[#1F2123] h-96 overflow-hidden">
@@ -649,23 +643,26 @@ function MainPage() {
                     </div>
                 </div>
 
-                <div className="bg-[#1F2123] px-2 py-4 border-l border-gray-800 h-full"> 
-                    <h3 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2 mx-2 text-red-500">En tu biblioteca</h3>
-                    <div className="space-y-3 px-2"> 
-                        {LIBRARY_IMAGES.map((src, i) => (
-                            <div key={i} className="cursor-pointer transform hover:scale-[1.05] transition duration-200 shadow-lg mx-auto">
-                                <div className="w-full h-24 rounded-lg overflow-hidden shadow-lg"> 
-                                    <img 
-                                        src={src} 
-                                        alt={`Carátula del juego ${i + 1}`}
-                                        className="w-full h-full object-cover"
-                                        onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}
-                                    />
+                {/* BARRA LATERAL DERECHA (EN TU BIBLIOTECA) - CONDICIONAL: Oculta en 'library' */}
+                {!hideRightBar && (
+                    <div className="bg-[#1F2123] px-2 py-4 border-l border-gray-800 h-full"> 
+                        <h3 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2 mx-2 text-red-500">En tu biblioteca</h3>
+                        <div className="space-y-3 px-2"> 
+                            {LIBRARY_IMAGES.map((src, i) => (
+                                <div key={i} className="cursor-pointer transform hover:scale-[1.05] transition duration-200 shadow-lg mx-auto">
+                                    <div className="w-full h-24 rounded-lg overflow-hidden shadow-lg"> 
+                                        <img 
+                                            src={src} 
+                                            alt={`Carátula del juego ${i + 1}`}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );
