@@ -3,11 +3,12 @@ import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import DownloadsPopup from '../components/DownloadsPopup';
 import FeedbackModal from '../components/FeedbackModal';
-// Importación del nuevo componente de Biblioteca
+// Importación de los nuevos componentes
 import Library from './Library'; 
+import Search from './Search'; // <-- Componente de la nueva vista (Explorar/Búsqueda)
 
 
-// --- CONSTANTES Y DATOS DE MOCK ---
+// --- CONSTANTES Y DATOS DE MOCK (ACTUALIZADO) ---
 
 const PLACEHOLDER_IMG = "https://placehold.co/250x100/374151/FFF?text=GAME+IMAGE+FALLBACK";
 const FREEFIRE_IMAGE_PATH = '/image10.svg';
@@ -16,13 +17,15 @@ const WUTHERING_WAVES_ICON = '/image19.svg';
 const FARM_HEROES_BANNER = '/image20.svg'; 
 
 const MOCK_GAMES = [
+    // CORRECCIÓN FINAL: 8 juegos en el orden exacto de la imagen
     { title: "Mobile Legends: Bang Bang", subtitle: "MOBA", rating: "4.0" },
-    { title: "Wuthering Waves", subtitle: "Acción", rating: "4.5" },
+    { title: "Wuthering Waves", subtitle: "Acción", rating: "4.5" }, 
     { title: "Geometry Dash Lite", subtitle: "Arcade", rating: "4.3" },
     { title: "Lichess", subtitle: "Mesa", rating: "3.8" },
     { title: "Geometry Dash SubZero", subtitle: "Arcade/SubZero", rating: "4.4" },
+    { title: "Geometry Dash World", subtitle: "Arcade", rating: "4.3" }, // Posición 6
     { title: "BombSquad", subtitle: "Fiesta", rating: "4.8" },
-    { title: "Bloody Bastards", subtitle: "Acción", rating: "4.6" },
+    { title: "Bloody Bastards", subtitle: "Acción", rating: "4.6" }, // Posición 8
 ];
 
 const CASUAL_GAMES = [
@@ -290,7 +293,7 @@ const CallToActionBanner = () => {
     const NEON_COLOR = '#FF0000';
     const NEON_HOVER_COLOR = '#8b000017'; 
     const [isHovered, setIsHovered] = useState(false); 
-    const currentBgColor = isHovered ? NEON_HOVER_COLOR : NEON_COLOR;
+    const currentBgColor = isHovered ? NEON_HOVERED_COLOR : NEON_COLOR;
 
     return (
         <div className="p-0 pt-10 mb-5"> 
@@ -475,6 +478,10 @@ const FreeFireDiscountCard = () => {
 }
 
 
+// --- ESTOS COMPONENTES SON LOS QUE VAMOS A ELIMINAR/MOVER ---
+/*
+// ¡IMPORTANTE! Estos bloques deben ELIMINARSE de tu archivo:
+
 const SearchPage = () => (
     <div className="p-10 text-center text-gray-400">
         <h2 className="text-3xl font-bold mb-4 text-white">Búsqueda</h2>
@@ -486,192 +493,192 @@ const GamesPage = () => (
     <div className="p-10 text-center text-gray-400">
         <h2 className="text-3xl font-bold mb-4 text-white">Juegos y Categorías</h2>
         <p>Explora diferentes categorías de juegos aquí.</p>
-        
-    </div>
+    </div>
 );
+*/
 
 
 // --- COMPONENTE PRINCIPAL ---
 
 function MainPage() {
-    const { logout } = useAuth(); 
-    const navigate = useNavigate(); 
-    const [activeSection, setActiveSection] = useState('home'); 
-    const [isDownloadsOpen, setIsDownloadsOpen] = useState(false);
-    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+    const { logout } = useAuth(); 
+    const navigate = useNavigate(); 
+    const [activeSection, setActiveSection] = useState('home'); 
+    const [isDownloadsOpen, setIsDownloadsOpen] = useState(false);
+    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
-    const handleLogout = () => {
-        logout();
-        navigate('/');
-    };
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
 
-    const handleViewDetails = () => console.log("¡Navegando a los detalles de Free Fire Max!");
-    const handleAvisosClick = () => console.log("Abrir Vista de Avisos/Notificaciones.");
-    const handleDownloadsClick = () => setIsDownloadsOpen(!isDownloadsOpen);
-    const handleFeedbackClick = () => setIsFeedbackOpen(true);
+    const handleViewDetails = () => console.log("¡Navegando a los detalles de Free Fire Max!");
+    const handleAvisosClick = () => console.log("Abrir Vista de Avisos/Notificaciones.");
+    const handleDownloadsClick = () => setIsDownloadsOpen(!isDownloadsOpen);
+    const handleFeedbackClick = () => setIsFeedbackOpen(true);
 
-    // NUEVO HANDLER: Abre la URL de Google Play en una nueva pestaña
-    const handleHistoryClick = () => {
-        const googlePlayUrl = `https://play.google.com/store/account/orderhistory?hl=es&gl=US`;
-        console.log("Redirigiendo a Historial de Pedidos de Google Play...");
-        window.open(googlePlayUrl, '_blank'); 
-    };
+    // NUEVO HANDLER: Abre la URL de Google Play en una nueva pestaña (CON CORRECCIÓN DE SESIÓN)
+    const handleHistoryClick = () => {
+        const googlePlayUrl = `https://play.google.com/store/account/orderhistory?authuser=-1&hl=es&gl=US`;
+        console.log("Redirigiendo a Historial de Pedidos de Google Play (Verificación de cuenta forzada)...");
+        window.open(googlePlayUrl, '_blank'); 
+    };
 
-    const renderContent = () => {
-        switch (activeSection) {
-            case 'search': return <SearchPage />;
-            case 'games': return <GamesPage />;
-            // MODIFICACIÓN CLAVE: Llama a Library y le pasa la función handleHistoryClick
-            case 'library': return <Library onHistoryClick={handleHistoryClick} />; 
-            default:
-                return (
-                    <div className="p-7 pt-20">
-                        <FreeFireDiscountCard /> 
-                            
-                        <h2 className="text-2xl font-bold mb-5 pt-6">Recomendados para ti</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 mb-10">
-                            {MOCK_GAMES.map((game, index) => (
-                                <GameCard key={index} game={game} index={index} />
-                            ))}
-                        </div>
+    const renderContent = () => {
+        switch (activeSection) {
+            case 'search': return <Search />; // <-- LLAMADA AL NUEVO COMPONENTE SEARCH
+            case 'games': return <GamesPage />; // Asumimos que GamesPage será movido o eliminado
+            // MODIFICACIÓN CLAVE: Llama a Library y le pasa la función handleHistoryClick
+            case 'library': return <Library onHistoryClick={handleHistoryClick} />; 
+            default:
+                return (
+                    <div className="p-7 pt-20">
+                        <FreeFireDiscountCard /> 
+                            
+                        <h2 className="text-2xl font-bold mb-5 pt-6">Recomendados para ti</h2>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 mb-10">
+                            {MOCK_GAMES.map((game, index) => (
+                                <GameCard key={index} game={game} index={index} />
+                            ))}
+                        </div>
 
-                        <FeaturedBanner /> 
-                        <CategoryGrid />
-                        <CompetitiveSection /> 
-                        <TopGamesSection /> 
-                        <JustAddedSection />
-                        <HeroesTimeSection />
-                        <PCStrategyGamesSection /> 
-                            
-                        <CallToActionBanner /> 
-                            
-                        <div className="h-0"></div>
-                    </div>
-                );
-        }
-    };
+                        <FeaturedBanner /> 
+                        <CategoryGrid />
+                        <CompetitiveSection /> 
+                        <TopGamesSection /> 
+                        <JustAddedSection />
+                        <HeroesTimeSection />
+                        <PCStrategyGamesSection /> 
+                            
+                        <CallToActionBanner /> 
+                            
+                        <div className="h-0"></div>
+                    </div>
+                );
+        }
+    };
 
-    const getIconClass = (section) => (
-        activeSection === section ? 'text-red-500' : 'text-white hover:text-gray-400 active:text-gray-600'
-    );
-    
-    // --- LÓGICA AGREGADA PARA OCULTAR BUSCADOR Y BARRA DERECHA ---
-    const hideSearch = activeSection === 'library'; 
-    const hideRightBar = activeSection === 'library'; 
+    const getIconClass = (section) => (
+        activeSection === section ? 'text-red-500' : 'text-white hover:text-gray-400 active:text-gray-600'
+    );
+    
+    // --- LÓGICA AGREGADA PARA OCULTAR BUSCADOR Y BARRA DERECHA ---
+    const hideSearch = activeSection === 'library' || activeSection === 'search'; 
+    const hideRightBar = activeSection === 'library' || activeSection === 'search'; 
 
-    // Define el layout del grid: Si la barra derecha se oculta, solo quedan dos columnas.
-    const gridLayout = hideRightBar ? "grid-cols-[90px_1fr]" : "grid-cols-[90px_1fr_250px]";
-    // --- FIN DE LA LÓGICA AGREGADA ---
+    // Define el layout del grid: Si la barra derecha se oculta, solo quedan dos columnas.
+    const gridLayout = hideRightBar ? "grid-cols-[90px_1fr]" : "grid-cols-[90px_1fr_250px]";
+    // --- FIN DE LA LÓGICA AGREGADA ---
 
-    return (
-        <div className="h-screen bg-[#1F2123] text-white font-sans overflow-hidden relative">
-            {/* USAMOS LA VARIABLE gridLayout PARA EL DISEÑO */}
-            <div className={`grid ${gridLayout} h-full`}> 
-                    
-                {/* BARRA LATERAL IZQUIERDA */}
-                <div className="bg-[#1F2123] pt-4 pb-4 flex flex-col items-center border-r border-gray-800 h-full relative">
-                        
-                    <div className="flex flex-col items-center mb-8" onClick={handleLogout}>
-                        <div className="h-10 w-10 bg-yellow-500 rounded-full cursor-pointer transform hover:scale-110 transition duration-150"></div>
-                    </div>
+    return (
+        <div className="h-screen bg-[#1F2123] text-white font-sans overflow-hidden relative">
+            {/* USAMOS LA VARIABLE gridLayout PARA EL DISEÑO */}
+            <div className={`grid ${gridLayout} h-full`}> 
+                    
+                {/* BARRA LATERAL IZQUIERDA */}
+                <div className="bg-[#1F2123] pt-4 pb-4 flex flex-col items-center border-r border-gray-800 h-full relative">
+                        
+                    <div className="flex flex-col items-center mb-8" onClick={handleLogout}>
+                        <div className="h-10 w-10 bg-yellow-500 rounded-full cursor-pointer transform hover:scale-110 transition duration-150"></div>
+                    </div>
 
-                    <div className="space-y-8"> 
-                        <div className={getIconClass('home') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('home')}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9.5L12 3l9 6.5V21h-6v-6H9v6H3V9.5z"/></svg>
-                        </div>
-                        <div className={getIconClass('library') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('library')}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        </div>
-                        <div className={getIconClass('search') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('search')}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        </div>
-                    </div>
+                    <div className="space-y-8"> 
+                        <div className={getIconClass('home') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('home')}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9.5L12 3l9 6.5V21h-6v-6H9v6H3V9.5z"/></svg>
+                        </div>
+                        <div className={getIconClass('library') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('library')}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        </div>
+                        <div className={getIconClass('search') + ' cursor-pointer p-1 rounded-md'} onClick={() => setActiveSection('search')}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        </div>
+                    </div>
 
-                    <div className="flex-grow"></div> 
+                    <div className="flex-grow"></div> 
 
-                    <div className="space-y-8 mb-4">
-                        <div className="text-white hover:text-gray-400 cursor-pointer p-1 rounded-md" onClick={handleAvisosClick}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.37 21a2 2 0 0 0 3.26 0"/></svg>
-                        </div>
+                    <div className="space-y-8 mb-4">
+                        <div className="text-white hover:text-gray-400 cursor-pointer p-1 rounded-md" onClick={handleAvisosClick}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.37 21a2 2 0 0 0 3.26 0"/></svg>
+                        </div>
 
-                        <div className="download-icon text-white hover:text-gray-400 cursor-pointer p-1 rounded-md relative" onClick={handleDownloadsClick}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        </div>
+                        <div className="download-icon text-white hover:text-gray-400 cursor-pointer p-1 rounded-md relative" onClick={handleDownloadsClick}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </div>
 
-                        <div className="text-white hover:text-gray-400 cursor-pointer p-1 rounded-md" onClick={handleFeedbackClick}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                        </div>
-                    </div>
+                        <div className="text-white hover:text-gray-400 cursor-pointer p-1 rounded-md" onClick={handleFeedbackClick}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        </div>
+                    </div>
 
-                    <DownloadsPopup isOpen={isDownloadsOpen} onClose={() => setIsDownloadsOpen(false)} />
-                    <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
-                </div>
+                    <DownloadsPopup isOpen={isDownloadsOpen} onClose={() => setIsDownloadsOpen(false)} />
+                    <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
+                </div>
 
-                {/* CONTENIDO PRINCIPAL Y BUSCADOR */}
-                <div className="bg-[#121212] overflow-y-auto h-full">
-                    
-                    {/* ENCABEZADO Y BUSCADOR (CONDICIONAL: Oculto en 'library') */}
-                    {!hideSearch && ( 
-                        <header className="p-6 pb-2 sticky top-0 z-30 bg-[#121212]">
-                            <input 
-                                type="text" 
-                                placeholder="Buscar juegos y contenido..."
-                                className="w-full bg-[#2B2D30] text-gray-300 px-4 py-2 rounded-lg border border-gray-700 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
-                            />
-                        </header>
-                    )}
+                {/* CONTENIDO PRINCIPAL Y BUSCADOR */}
+                <div className="bg-[#121212] overflow-y-auto h-full">
+                    
+                    {/* ENCABEZADO Y BUSCADOR (CONDICIONAL: ESTO ES LO QUE NO QUEREMOS TOCAR EN LA VISTA HOME) */}
+                    {!hideSearch && ( 
+                        <header className="p-6 pb-2 sticky top-0 z-30 bg-[#121212]">
+                            <input 
+                                type="text" 
+                                placeholder="Buscar juegos y contenido..."
+                                className="w-full bg-[#2B2D30] text-gray-300 px-4 py-2 rounded-lg border border-gray-700 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none"
+                            />
+                        </header>
+                    )}
 
-                    {activeSection === 'home' && (
-                        <div className="relative bg-[#1F2123] h-96 overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-tr from-[#1f2123] via-black to-[#ff0000] opacity-80"></div>
-                            <div className="absolute right-0 top-0 h-full w-[70%] bg-cover bg-center [clip-path:polygon(20%_0%,_100%_0%,_100%_100%,_0%_100%)]"
-                                style={{ backgroundImage: "url('/image9.svg')" }}>
-                            </div>
-                            <div className="relative z-10 p-10 max-w-xl h-full flex flex-col justify-end">
-                                <h2 className="text-5xl font-black mb-3 text-[#FF0000]">FREE FIRE MAX</h2> 
-                                <h3 className="text-xl font-semibold text-gray-300">Sobrevive y domina en el campo de batalla</h3>
-                                <p className="text-xs text-gray-400 mt-2">Free Fire Max | Garena International</p>
-                                <div className="mt-6">
-                                    <button 
-                                        onClick={handleViewDetails}
-                                        className="px-6 py-2 bg-[#FF0000] text-white font-bold rounded-lg hover:bg-red-800 transition duration-150"
-                                    >
-                                        Ver detalles
-                                    </button>
-                                    <p className="text-xs text-gray-500 mt-2">Contiene anuncios · Compras directas desde la app</p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                    {activeSection === 'home' && (
+                        <div className="relative bg-[#1F2123] h-96 overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-[#1f2123] via-black to-[#ff0000] opacity-80"></div>
+                            <div className="absolute right-0 top-0 h-full w-[70%] bg-cover bg-center [clip-path:polygon(20%_0%,_100%_0%,_100%_100%,_0%_100%)]"
+                                style={{ backgroundImage: "url('/image9.svg')" }}>
+                            </div>
+                            <div className="relative z-10 p-10 max-w-xl h-full flex flex-col justify-end">
+                                <h2 className="text-5xl font-black mb-3 text-[#FF0000]">FREE FIRE MAX</h2> 
+                                <h3 className="text-xl font-semibold text-gray-300">Sobrevive y domina en el campo de batalla</h3>
+                                <p className="text-xs text-gray-400 mt-2">Free Fire Max | Garena International</p>
+                                <div className="mt-6">
+                                    <button 
+                                        onClick={handleViewDetails}
+                                        className="px-6 py-2 bg-[#FF0000] text-white font-bold rounded-lg hover:bg-red-800 transition duration-150"
+                                    >
+                                        Ver detalles
+                                    </button>
+                                    <p className="text-xs text-gray-500 mt-2">Contiene anuncios · Compras directas desde la app</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
-                    <div className="p-6 pt-0">
-                        {renderContent()}
-                    </div>
-                </div>
+                    <div className="p-6 pt-0">
+                        {renderContent()}
+                    </div>
+                </div>
 
-                {/* BARRA LATERAL DERECHA (EN TU BIBLIOTECA) - CONDICIONAL: Oculta en 'library' */}
-                {!hideRightBar && (
-                    <div className="bg-[#1F2123] px-2 py-4 border-l border-gray-800 h-full"> 
-                        <h3 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2 mx-2 text-red-500">En tu biblioteca</h3>
-                        <div className="space-y-3 px-2"> 
-                            {LIBRARY_IMAGES.map((src, i) => (
-                                <div key={i} className="cursor-pointer transform hover:scale-[1.05] transition duration-200 shadow-lg mx-auto">
-                                    <div className="w-full h-24 rounded-lg overflow-hidden shadow-lg"> 
-                                        <img 
-                                            src={src} 
-                                            alt={`Carátula del juego ${i + 1}`}
-                                            className="w-full h-full object-cover"
-                                            onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
+                {/* BARRA LATERAL DERECHA (EN TU BIBLIOTECA) - CONDICIONAL: Oculta en 'library' */}
+                {!hideRightBar && (
+                    <div className="bg-[#1F2123] px-2 py-4 border-l border-gray-800 h-full"> 
+                        <h3 className="text-lg font-semibold mb-4 border-b border-gray-700 pb-2 mx-2 text-red-500">En tu biblioteca</h3>
+                        <div className="space-y-3 px-2"> 
+                            {LIBRARY_IMAGES.map((src, i) => (
+                                <div key={i} className="cursor-pointer transform hover:scale-[1.05] transition duration-200 shadow-lg mx-auto">
+                                    <div className="w-full h-24 rounded-lg overflow-hidden shadow-lg"> 
+                                        <img 
+                                            src={src} 
+                                            alt={`Carátula del juego ${i + 1}`}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMG }}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 }
 
 export default MainPage;
