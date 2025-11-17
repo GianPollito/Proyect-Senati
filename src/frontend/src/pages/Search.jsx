@@ -58,7 +58,7 @@ const GameCard = ({ game }) => {
                 <h3 className="text-base font-semibold truncate">{game.title}</h3>
                 <p className="text-xs text-gray-400 mt-0.5 flex items-center">
                     <StarIcon />
-                    {game.rating} | {subtext}
+                    {game.rating} | {game.tags ? game.tags.join(', ')[0] : ''} 
                 </p>
             </div>
             {/* INDICADOR DE INSTALADO (Green Checkmark) */}
@@ -86,13 +86,16 @@ const ActiveFilterCloseButton = ({ filterLabel, onRemove, className = '' }) => {
 };
 
 
-// Componente de Botón de Filtro individual (con estilos de borde y hover - SIN CAMBIOS)
+// Componente de Botón de Filtro individual (con estilos de borde y hover)
+// 💡 CAMBIO PRINCIPAL AQUÍ: Usamos opacity para el hover de la sombra
 const FilterButton = ({ label, isActive, isGroupStart, isGroupEnd, onClick, isGroupHovered }) => {
     
     // Define las clases de estilo base
     const baseStyle = `
-        flex items-center px-4 py-2 text-sm font-semibold whitespace-nowrap 
+        flex items-center px-6 py-2 text-sm font-semibold whitespace-nowrap 
         transition-colors duration-200 cursor-pointer 
+        // 🚨 CAMBIO CLAVE: Agregamos relative y una transición en opacity
+        relative transition-opacity duration-200
     `;
 
     // Clases para color activo (Fondo red-600, Hover red-700, Texto blanco)
@@ -106,10 +109,9 @@ const FilterButton = ({ label, isActive, isGroupStart, isGroupEnd, onClick, isGr
     
     let borderColor = '#991b1b'; 
     
-    if (!isActive && isGroupHovered) {
+    if (!isActive) {
+        // Usamos el color más claro (#dc2626) para la sombra y borde de un botón inactivo
         borderColor = '#dc2626'; 
-    } else if (!isActive && !isGroupHovered) {
-        borderColor = '#991b1b'; 
     }
 
 
@@ -119,7 +121,15 @@ const FilterButton = ({ label, isActive, isGroupStart, isGroupEnd, onClick, isGr
         borderRadius: '9999px',
         borderLeft: !isActive && !isGroupStart ? 'none' : `1px solid ${borderColor}`,
         marginLeft: !isActive && !isGroupStart ? '-1px' : '0',
-        boxShadow: isActive ? 'none' : '0 0 4px rgba(220, 38, 38, 0.4)',
+        
+        // 🎯 SOLUCIÓN CLAVE AL JITTER: Forzar estabilidad con aceleración de hardware
+        transform: 'translateZ(0)', 
+        
+        // 💡 CAMBIO CLAVE: Mantenemos la sombra FUERTE (opacity 0.8) CONSTANTE en inactivos.
+        // El cambio de brillo se simula con la opacidad del div padre.
+        boxShadow: isActive 
+            ? 'none' 
+            : '0 0 4px rgba(220, 38, 38, 0.8)', 
     };
     
     if (!isActive) {
@@ -132,15 +142,15 @@ const FilterButton = ({ label, isActive, isGroupStart, isGroupEnd, onClick, isGr
 
     return (
         <div 
-            className={`${baseStyle} ${colorClasses} flex items-center`}
+            className={`${baseStyle} ${colorClasses} flex items-center 
+            // 🚨 APLICACIÓN DE SOLUCIÓN: Si es inactivo, iniciamos con opacidad más baja (70%) 
+            // y la clase 'group-hover:opacity-100' hará el efecto de brillo sin mover el layout.
+            ${!isActive ? 'opacity-70 group-hover:opacity-100' : ''}
+            `}
             style={dynamicStyle}
             onClick={() => { onClick(label); }}
         >
             <span>{label}</span>
-            
-            {label === "Géneros" && !isActive && ( 
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            )}
         </div>
     );
 };
@@ -149,9 +159,8 @@ const FilterButton = ({ label, isActive, isGroupStart, isGroupEnd, onClick, isGr
 // --- COMPONENTE PRINCIPAL DE BÚSQUEDA/EXPLORACIÓN ---
 const Search = () => {
     
-    // Definición de filtros (SIN CAMBIOS)
     const filterGroupsDefinition = [
-        "Géneros",
+        ["Acción", "Aventura", "Carreras", "Deportes", "Educativos", "Estrategia", "Simulación"], 
         ["4 ★", "4.2 ★", "4.5 ★", "4.7 ★"], // Grupo 1: Calificación (Unidos)
         ["Sin anuncios", "Sin compras adicionales"], // Grupo 2: Monetización (Unidos)
         ["Un jugador", "Multijugador"], // Grupo 3: Un Jugador/Multijugador (Unidos)
@@ -160,11 +169,13 @@ const Search = () => {
         "Lo mejor para esta PC"
     ];
     
-    // Estado inicial: solo "Ocultar no probados" activo.
     const initialActiveFilters = ["Ocultar no probados"]; 
     const [activeFilters, setActiveFilters] = useState(initialActiveFilters);
     
+    // Ya no es estrictamente necesario, pero lo mantenemos para el onMouseEnter/onMouseLeave
     const [hoveredGroup, setHoveredGroup] = useState(null); 
+
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
     
     const removeFilter = (filter) => {
         setActiveFilters(activeFilters.filter(f => f !== filter));
@@ -174,17 +185,14 @@ const Search = () => {
         if (activeFilters.includes(filter)) {
             removeFilter(filter);
         } else {
-            // Nuevo filtro se añade AL FINAL. Esto mantiene el orden por tiempo.
             setActiveFilters([...activeFilters, filter]);
         }
     };
     
-    // ✨ FUNCIÓN PARA LIMPIAR TODOS LOS FILTROS (Limpia todo)
     const clearAllFilters = () => {
         setActiveFilters([]); 
     };
 
-    // Lógica para mostrar el botón de limpieza global: solo si hay más de un filtro activo (length > 1).
     const hasMultipleActiveFilters = activeFilters.length > 1;
 
     // Función para renderizar los grupos de filtros
@@ -192,28 +200,22 @@ const Search = () => {
         let activeElements = []; 
         let inactiveElements = []; 
 
-        // 1. RENDERIZAR FILTROS ACTIVOS (ORDENADOS POR TIEMPO)
         activeFilters.forEach((label, index) => {
             
-            // isFirstActiveElement: El filtro que se activó primero (índice 0)
             const isFirstActiveElement = index === 0;
-
-            // Condicional para el botón X individual: Solo si es el primero Y el botón global NO está
             const shouldRenderIndividualCloseButton = isFirstActiveElement && !hasMultipleActiveFilters;
 
             activeElements.push(
                 <div key={`active-label-${label}`} className="flex mr-3 items-center">
                     
-                    {/* 🔄 CONDICIONAL: Botón X individual solo si es el primero y no hay otros filtros */}
                     {shouldRenderIndividualCloseButton && (
-                         <ActiveFilterCloseButton 
-                             filterLabel={label} 
-                             onRemove={removeFilter} 
-                             className="mr-2"
-                         />
+                           <ActiveFilterCloseButton 
+                                filterLabel={label} 
+                                onRemove={removeFilter} 
+                                className="mr-2"
+                           />
                     )}
 
-                    {/* 2. Botón de la Etiqueta */}
                     <FilterButton 
                         label={label} 
                         isActive={true}
@@ -225,17 +227,14 @@ const Search = () => {
             );
         });
         
-        // 2. RENDERIZAR FILTROS INACTIVOS (ORDENADOS POR DEFINICIÓN)
         filterGroupsDefinition.forEach((groupOrFilter) => {
             
             const members = Array.isArray(groupOrFilter) ? groupOrFilter : [groupOrFilter];
             const isActiveGroup = members.some(label => activeFilters.includes(label));
             
-            // Solo renderizar si el grupo/filtro está INACTIVO
             if (!isActiveGroup) {
                 
                 if (Array.isArray(groupOrFilter)) {
-                    // Grupo segmentado inactivo
                     const groupKey = groupOrFilter.toString();
                     const isGroupHovered = hoveredGroup === groupKey; 
 
@@ -256,7 +255,7 @@ const Search = () => {
                     inactiveElements.push(
                         <div 
                             key={groupKey} 
-                            className="flex mr-3"
+                            className="flex mr-3 group" // 👈 CAMBIO: Clase 'group' agregada
                             onMouseEnter={() => setHoveredGroup(groupKey)}
                             onMouseLeave={() => setHoveredGroup(null)}
                         >
@@ -264,12 +263,11 @@ const Search = () => {
                         </div>
                     );
                 } else if (typeof groupOrFilter === 'string') {
-                    // Botón individual inactivo
                     const isHovered = hoveredGroup === groupOrFilter; 
                     inactiveElements.push(
                         <div 
                             key={groupOrFilter} 
-                            className="flex mr-3"
+                            className="flex mr-3 group" // 👈 CAMBIO: Clase 'group' agregada
                             onMouseEnter={() => setHoveredGroup(groupOrFilter)}
                             onMouseLeave={() => setHoveredGroup(null)}
                         >
@@ -287,38 +285,73 @@ const Search = () => {
             }
         });
 
-        // 3. Devolvemos los activos primero (ordenados por tiempo), luego los inactivos (ordenados por definición).
         return [...activeElements, ...inactiveElements];
     };
 
 
     return (
-        <div className="p-6 pt-2"> 
+        // El padding superior se mantiene
+        <div className="p-6 pt-8"> 
             
-            {/* BARRA SUPERIOR: TÍTULO y BUSCADOR INTEGRADO (SIN CAMBIOS) */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-extrabold text-white">Explorar</h1>
-                <div className="relative flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-400 absolute left-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            {/* BARRA SUPERIOR: TÍTULO y BUSCADOR INTEGRADO */}
+            <div className="flex justify-between items-center mb-10"> 
+                {/* 🔒 REVERTIDO: Vuelvo a la configuración que pediste */}
+                <h1 className="text-5xl font-extrabold text-white -mt-4">Explorar</h1>
+                
+                {/* BUSCADOR */}
+                <div 
+                    className={`relative flex items-center rounded-full transition-all duration-200 
+                                w-80                            
+                                ${isSearchFocused 
+                                    ? 'bg-red-600 border border-white shadow-red-glow' 
+                                    : 'bg-transparent border border-red-700 hover:border-red-500 shadow-red-sm'}` 
+                                }
+                    onFocus={() => setIsSearchFocused(true)}
+                    onBlur={() => setIsSearchFocused(false)}
+                    tabIndex="0" 
+                    style={{ 
+                        boxShadow: isSearchFocused ? '0 0 8px rgba(220, 38, 38, 0.8)' : '0 0 4px rgba(220, 38, 38, 0.4)' 
+                    }}
+                >
+                    {/* Icono de búsqueda */}
+                    <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className={`w-5 h-5 absolute left-3 transition-colors duration-200 
+                                    ${isSearchFocused ? 'text-white' : 'text-gray-400'}`} 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                    >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    
+                    {/* Input de búsqueda */}
                     <input 
                         type="text" 
                         placeholder="Buscar"
-                        className="bg-transparent text-white pl-10 pr-4 py-2 rounded-full border border-red-700 
-                                     focus:outline-none text-base w-60 hover:border-red-500 transition-colors duration-200"
-                        style={{ boxShadow: '0 0 4px rgba(220, 38, 38, 0.4)' }}
+                        className={`bg-transparent pl-10 pr-4 py-2 rounded-full border-none 
+                                     focus:outline-none text-base w-full                            
+                                    ${isSearchFocused 
+                                        ? 'text-white placeholder-white' 
+                                        : 'text-white placeholder-gray-400'}`
+                                    }
                     />
                 </div>
             </div>
             
             {/* BARRA DE FILTROS SELECCIONABLES Y ACTIVOS */}
-            <div className="flex space-x-3 mb-8 overflow-x-auto pb-2"> 
+            <div className="flex space-x-3 mb-8 flex-wrap gap-y-4 pb-2"> 
 
-                {/* ✨ BOTÓN 'X' GLOBAL: Solo aparece si hay más de un filtro activo */}
+                {/* BOTÓN 'X' GLOBAL: Solo aparece si hay más de un filtro activo */}
                 {hasMultipleActiveFilters && (
                     <ActiveFilterCloseButton 
                         filterLabel="Limpiar Todo" 
                         onRemove={clearAllFilters} 
-                        className="" // Clase vacía. Confiamos en `space-x-3` del padre.
+                        className="" 
                     />
                 )}
                 
@@ -328,8 +361,6 @@ const Search = () => {
 
             {/* SECCIÓN DE JUEGOS PRINCIPAL */}
             
-            {/* ❌ ELIMINADO: h2 "Lo mejor para esta PC" y su borde inferior. */}
-
             {/* CUADRÍCULA DE JUEGOS */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 pt-2">
                 {EXPLORER_GAMES.map((game, index) => (
