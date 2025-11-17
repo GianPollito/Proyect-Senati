@@ -180,7 +180,7 @@ const Library = ({ onHistoryClick }) => { // <-- RECIBE LA FUNCIÓN
             <div> 
 
                 <div className="flex justify-between items-center mb-8 px-7">
-                    <h1 className="text-4xl font-extrabold text-white">Biblioteca</h1>
+                    <h1 className="text-5xl font-extrabold text-white">Biblioteca</h1>
                     <span 
                         className="text-base text-red-500 cursor-pointer hover:text-gray-500"
                         onClick={onHistoryClick} // <-- FUNCIÓN AL CLIC (Primer Botón)
