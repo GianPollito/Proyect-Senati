@@ -63,16 +63,31 @@ const GameCard = ({ game }) => {
             </div>
             {/* INDICADOR DE INSTALADO (Green Checkmark) */}
             {game.installed && (
-                 <div className="absolute top-2 right-2 bg-black/50 rounded-full p-1">
-                     <CheckIcon />
-                 </div>
+                    <div className="absolute top-2 right-2 bg-black/50 rounded-full p-1">
+                        <CheckIcon />
+                    </div>
             )}
         </div>
     );
 };
 
-// Componente de Botón de Filtro individual (con estilos de borde y hover)
-const FilterButton = ({ label, isActive, isGroupStart, isGroupEnd, onClick, onRemove }) => {
+
+// --- COMPONENTE ActiveFilterCloseButton (SIN CAMBIOS) ---
+const ActiveFilterCloseButton = ({ filterLabel, onRemove, className = '' }) => {
+    return (
+        <div 
+            className={`flex items-center justify-center w-8 h-8 rounded-full bg-red-600 
+                        transition-colors duration-200 cursor-pointer hover:bg-red-700 ${className}`}
+            onClick={(e) => { e.stopPropagation(); onRemove(filterLabel); }} 
+        >
+             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+    );
+};
+
+
+// Componente de Botón de Filtro individual (con estilos de borde y hover - SIN CAMBIOS)
+const FilterButton = ({ label, isActive, isGroupStart, isGroupEnd, onClick, isGroupHovered }) => {
     
     // Define las clases de estilo base
     const baseStyle = `
@@ -80,51 +95,50 @@ const FilterButton = ({ label, isActive, isGroupStart, isGroupEnd, onClick, onRe
         transition-colors duration-200 cursor-pointer 
     `;
 
+    // Clases para color activo (Fondo red-600, Hover red-700, Texto blanco)
+    const activeColors = 'bg-red-600 hover:bg-red-700 text-white border-none';
+    
+    // Clases para color inactivo (Fondo y Texto original)
+    const inactiveColors = 'bg-[#1F2123] text-[#A0A0A0]';
+
+    // Clases de color base (fondo, texto, y hover del ACTIVO)
+    const colorClasses = isActive ? activeColors : inactiveColors;
+    
+    let borderColor = '#991b1b'; 
+    
+    if (!isActive && isGroupHovered) {
+        borderColor = '#dc2626'; 
+    } else if (!isActive && !isGroupHovered) {
+        borderColor = '#991b1b'; 
+    }
+
+
     // Estilos dinámicos para los botones segmentados y colores
     const dynamicStyle = {
-        color: isActive ? 'white' : '#A0A0A0', // Color del texto
-        backgroundColor: isActive ? '#dc2626' : '#1F2123', // Color del fondo (Rojo o Gris Oscuro)
-        
-        // Estilos del borde para botones inactivos
-        border: isActive ? 'none' : '1px solid #dc2626',
-        
-        // Manejo del redondeo: solo en los extremos de la agrupación
-        borderRadius: isGroupStart && isGroupEnd ? '9999px' : // Botón individual (ej: Géneros)
-                      isGroupStart ? '9999px 0 0 9999px' : // Inicio del grupo
-                      isGroupEnd ? '0 9999px 9999px 0' : // Fin del grupo
-                      '0', // Ningún redondeo en los botones intermedios
-        
-        // Elimina el borde izquierdo visible si no es el inicio del grupo
-        borderLeft: !isActive && !isGroupStart ? 'none' : '1px solid #dc2626',
-        
-        // Ajuste fino para la superposición del borde cuando están inactivos y agrupados
+        border: isActive ? 'none' : `1px solid ${borderColor}`,
+        borderRadius: '9999px',
+        borderLeft: !isActive && !isGroupStart ? 'none' : `1px solid ${borderColor}`,
         marginLeft: !isActive && !isGroupStart ? '-1px' : '0',
-        
-        // Sombra roja para el efecto de borde
         boxShadow: isActive ? 'none' : '0 0 4px rgba(220, 38, 38, 0.4)',
     };
     
-    // Aplicar estilos de hover (cambia la sombra del borde rojo a un rojo más oscuro)
-    const hoverClass = !isActive ? 'hover:bg-gray-700 hover:shadow-[0_0_5px_rgba(185,28,28,0.7)]' : '';
+    if (!isActive) {
+        dynamicStyle.borderRadius = (isGroupStart && isGroupEnd) ? '9999px' : 
+                                     isGroupStart ? '9999px 0 0 9999px' : 
+                                     isGroupEnd ? '0 9999px 9999px 0' : 
+                                     '0';
+    }
+
 
     return (
         <div 
-            className={`${baseStyle} ${hoverClass} flex items-center`}
+            className={`${baseStyle} ${colorClasses} flex items-center`}
             style={dynamicStyle}
-            onClick={() => { onClick(label); }} // Al hacer clic en un botón activo o inactivo, llama a toggleFilter
+            onClick={() => { onClick(label); }}
         >
-            {isActive && ( // FIX: Mostrar la X para TODOS los filtros activos
-                 <button 
-                    onClick={(e) => { e.stopPropagation(); onRemove(label); }} 
-                    className="mr-2 text-white hover:text-red-300"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            )}
-            
             <span>{label}</span>
             
-            {label === "Géneros" && !isActive && ( // Icono de desplegable para Géneros
+            {label === "Géneros" && !isActive && ( 
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
             )}
         </div>
@@ -135,7 +149,7 @@ const FilterButton = ({ label, isActive, isGroupStart, isGroupEnd, onClick, onRe
 // --- COMPONENTE PRINCIPAL DE BÚSQUEDA/EXPLORACIÓN ---
 const Search = () => {
     
-    // Lista de filtros disponibles y su agrupación visual, EN EL ORDEN EXACTO DESEADO
+    // Definición de filtros (SIN CAMBIOS)
     const filterGroupsDefinition = [
         "Géneros",
         ["4 ★", "4.2 ★", "4.5 ★", "4.7 ★"], // Grupo 1: Calificación (Unidos)
@@ -147,10 +161,12 @@ const Search = () => {
     ];
     
     // Estado inicial: solo "Ocultar no probados" activo.
-    const [activeFilters, setActiveFilters] = useState(["Ocultar no probados"]);
+    const initialActiveFilters = ["Ocultar no probados"]; 
+    const [activeFilters, setActiveFilters] = useState(initialActiveFilters);
+    
+    const [hoveredGroup, setHoveredGroup] = useState(null); 
     
     const removeFilter = (filter) => {
-        // La X del filtro activo lo desactiva y lo elimina de la lista activa
         setActiveFilters(activeFilters.filter(f => f !== filter));
     };
     
@@ -158,121 +174,164 @@ const Search = () => {
         if (activeFilters.includes(filter)) {
             removeFilter(filter);
         } else {
+            // Nuevo filtro se añade AL FINAL. Esto mantiene el orden por tiempo.
             setActiveFilters([...activeFilters, filter]);
         }
     };
+    
+    // ✨ FUNCIÓN PARA LIMPIAR TODOS LOS FILTROS (Limpia todo)
+    const clearAllFilters = () => {
+        setActiveFilters([]); 
+    };
 
+    // Lógica para mostrar el botón de limpieza global: solo si hay más de un filtro activo (length > 1).
+    const hasMultipleActiveFilters = activeFilters.length > 1;
 
-    // Función para renderizar los grupos de filtros (con el nuevo comportamiento de ocultamiento)
+    // Función para renderizar los grupos de filtros
     const renderFilterButtons = () => {
-        let finalButtonElements = [];
-        
-        // FASE 1: Renderizar filtros activos (Movimiento al inicio)
-        const allFilterLabels = filterGroupsDefinition.flat(); 
-        const currentlyActiveLabels = allFilterLabels.filter(label => activeFilters.includes(label));
-        
-        // Renderizar los labels activos individualmente al inicio
-        currentlyActiveLabels.forEach(label => {
-            finalButtonElements.push(
-                <div key={`active-${label}`} className="flex mr-3">
+        let activeElements = []; 
+        let inactiveElements = []; 
+
+        // 1. RENDERIZAR FILTROS ACTIVOS (ORDENADOS POR TIEMPO)
+        activeFilters.forEach((label, index) => {
+            
+            // isFirstActiveElement: El filtro que se activó primero (índice 0)
+            const isFirstActiveElement = index === 0;
+
+            // Condicional para el botón X individual: Solo si es el primero Y el botón global NO está
+            const shouldRenderIndividualCloseButton = isFirstActiveElement && !hasMultipleActiveFilters;
+
+            activeElements.push(
+                <div key={`active-label-${label}`} className="flex mr-3 items-center">
+                    
+                    {/* 🔄 CONDICIONAL: Botón X individual solo si es el primero y no hay otros filtros */}
+                    {shouldRenderIndividualCloseButton && (
+                         <ActiveFilterCloseButton 
+                             filterLabel={label} 
+                             onRemove={removeFilter} 
+                             className="mr-2"
+                         />
+                    )}
+
+                    {/* 2. Botón de la Etiqueta */}
                     <FilterButton 
                         label={label} 
                         isActive={true}
                         isGroupStart={true}
-                        isGroupEnd={true}
+                        isGroupEnd={true} 
                         onClick={toggleFilter}
-                        onRemove={removeFilter}
                     />
                 </div>
             );
         });
         
-        // FASE 2: Renderizar filtros inactivos (Segmentación y orden originales)
+        // 2. RENDERIZAR FILTROS INACTIVOS (ORDENADOS POR DEFINICIÓN)
         filterGroupsDefinition.forEach((groupOrFilter) => {
             
-            if (Array.isArray(groupOrFilter)) {
-                // Paso 1: Verificar si ALGÚN miembro del grupo está activo.
-                const hasActiveMember = groupOrFilter.some(label => activeFilters.includes(label));
-
-                // Si hay un miembro activo, omitimos renderizar el grupo segmentado en la Fase 2
-                // para que los inactivos se "oculten".
-                if (hasActiveMember) {
-                    return; 
-                }
+            const members = Array.isArray(groupOrFilter) ? groupOrFilter : [groupOrFilter];
+            const isActiveGroup = members.some(label => activeFilters.includes(label));
+            
+            // Solo renderizar si el grupo/filtro está INACTIVO
+            if (!isActiveGroup) {
                 
-                // Si NO hay miembros activos, renderizamos el grupo completo como segmento inactivo
-                const groupElements = groupOrFilter.map((label, index) => { 
-                    return (
-                        <FilterButton
-                            key={label} 
-                            label={label}
-                            isActive={false}
-                            isGroupStart={index === 0}
-                            isGroupEnd={index === groupOrFilter.length - 1}
-                            onClick={toggleFilter}
-                            onRemove={removeFilter}
-                        />
+                if (Array.isArray(groupOrFilter)) {
+                    // Grupo segmentado inactivo
+                    const groupKey = groupOrFilter.toString();
+                    const isGroupHovered = hoveredGroup === groupKey; 
+
+                    const groupElements = groupOrFilter.map((label, index) => { 
+                        return (
+                            <FilterButton
+                                key={label} 
+                                label={label}
+                                isActive={false}
+                                isGroupStart={index === 0}
+                                isGroupEnd={index === groupOrFilter.length - 1}
+                                onClick={toggleFilter}
+                                isGroupHovered={isGroupHovered} 
+                            />
+                        );
+                    });
+                    
+                    inactiveElements.push(
+                        <div 
+                            key={groupKey} 
+                            className="flex mr-3"
+                            onMouseEnter={() => setHoveredGroup(groupKey)}
+                            onMouseLeave={() => setHoveredGroup(null)}
+                        >
+                            {groupElements}
+                        </div>
                     );
-                });
-                
-                finalButtonElements.push(
-                    <div key={groupOrFilter.toString()} className="flex mr-3">
-                        {groupElements}
-                    </div>
-                );
-
-            } else if (typeof groupOrFilter === 'string' && !activeFilters.includes(groupOrFilter)) {
-                // Renderizar botones individuales inactivos
-                 finalButtonElements.push(
-                    <div key={groupOrFilter} className="flex mr-3">
-                        <FilterButton 
-                            label={groupOrFilter} 
-                            isActive={false}
-                            isGroupStart={true}
-                            isGroupEnd={true}
-                            onClick={toggleFilter}
-                            onRemove={removeFilter}
-                        />
-                    </div>
-                );
+                } else if (typeof groupOrFilter === 'string') {
+                    // Botón individual inactivo
+                    const isHovered = hoveredGroup === groupOrFilter; 
+                    inactiveElements.push(
+                        <div 
+                            key={groupOrFilter} 
+                            className="flex mr-3"
+                            onMouseEnter={() => setHoveredGroup(groupOrFilter)}
+                            onMouseLeave={() => setHoveredGroup(null)}
+                        >
+                            <FilterButton 
+                                label={groupOrFilter} 
+                                isActive={false}
+                                isGroupStart={true}
+                                isGroupEnd={true}
+                                onClick={toggleFilter}
+                                isGroupHovered={isHovered} 
+                            />
+                        </div>
+                    );
+                }
             }
         });
 
-        return finalButtonElements;
+        // 3. Devolvemos los activos primero (ordenados por tiempo), luego los inactivos (ordenados por definición).
+        return [...activeElements, ...inactiveElements];
     };
 
 
     return (
         <div className="p-6 pt-2"> 
             
-            {/* BARRA SUPERIOR: TÍTULO y BUSCADOR INTEGRADO */}
+            {/* BARRA SUPERIOR: TÍTULO y BUSCADOR INTEGRADO (SIN CAMBIOS) */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-extrabold text-white">Explorar</h1>
-                {/* Input de búsqueda con diseño específico */}
                 <div className="relative flex items-center">
-                    {/* Icono de búsqueda a la izquierda */}
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-400 absolute left-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     <input 
                         type="text" 
                         placeholder="Buscar"
                         className="bg-transparent text-white pl-10 pr-4 py-2 rounded-full border border-red-700 
-                                   focus:outline-none text-base w-60 hover:border-red-500 transition-colors duration-200"
-                        style={{ boxShadow: '0 0 4px rgba(220, 38, 38, 0.4)' }} // Sombra para el borde
+                                     focus:outline-none text-base w-60 hover:border-red-500 transition-colors duration-200"
+                        style={{ boxShadow: '0 0 4px rgba(220, 38, 38, 0.4)' }}
                     />
                 </div>
             </div>
             
             {/* BARRA DE FILTROS SELECCIONABLES Y ACTIVOS */}
-            <div className="flex space-x-3 mb-8 overflow-x-auto pb-2">
+            <div className="flex space-x-3 mb-8 overflow-x-auto pb-2"> 
+
+                {/* ✨ BOTÓN 'X' GLOBAL: Solo aparece si hay más de un filtro activo */}
+                {hasMultipleActiveFilters && (
+                    <ActiveFilterCloseButton 
+                        filterLabel="Limpiar Todo" 
+                        onRemove={clearAllFilters} 
+                        className="" // Clase vacía. Confiamos en `space-x-3` del padre.
+                    />
+                )}
+                
                 {renderFilterButtons()}
             </div>
 
 
             {/* SECCIÓN DE JUEGOS PRINCIPAL */}
-            <h2 className="text-xl font-bold text-white mb-5 pt-2 border-b border-gray-800 pb-3">Lo mejor para este PC</h2>
+            
+            {/* ❌ ELIMINADO: h2 "Lo mejor para esta PC" y su borde inferior. */}
 
             {/* CUADRÍCULA DE JUEGOS */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 pt-2">
                 {EXPLORER_GAMES.map((game, index) => (
                     <GameCard 
                         key={index} 
@@ -281,7 +340,7 @@ const Search = () => {
                 ))}
             </div>
             
-            <div className="h-10"></div> {/* Espacio extra al final */}
+            <div className="h-10"></div>
         </div>
     );
 };
