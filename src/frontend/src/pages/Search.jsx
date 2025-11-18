@@ -2,12 +2,13 @@ import React, { useState, useMemo } from 'react';
 
 // NOTA: El requisito de "máximo 24 juegos por categoría" se interpreta aquí como
 // "exactamente 24 juegos por cada categoría de género (Acción, Estrategia, etc.)" para asegurar densidad.
+// La data se ha actualizado para incluir juegos actuales y reconocibles.
 
 const PLACEHOLDER_IMG = "https://placehold.co/250x100/374151/FFF?text=GAME+IMAGE+FALLBACK";
 
-// --- DEFINICIÓN DE CATEGORÍAS Y JUEGOS BASE (24 ÚNICOS) ---
+// --- DEFINICIÓN DE CATEGORÍAS Y JUEGOS TEMÁTICOS (192 JUEGOS EN TOTAL) ---
 
-// 1. Las 8 categorías de género que deben tener 24 juegos cada una.
+// 1. Las 8 categorías de género.
 const GAME_GENRE_CATEGORIES = [
     "Acción", 
     "Aventura", 
@@ -19,45 +20,247 @@ const GAME_GENRE_CATEGORIES = [
     "Juegos de rol"
 ];
 
-// 2. Base de 24 juegos con propiedades variadas (se clonarán 8 veces).
-const BASE_24_GAMES = [
-    { title: "Clash Royale", rating: "4.7", installed: true, tags: ["Multijugador", "Sin anuncios"], image: "/image27.svg" },
-    { title: "Clash of Clans", rating: "4.5", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image30.svg" },
-    { title: "CookieRun: Kingdom", rating: "4.8", installed: false, tags: ["Un jugador", "Sin compras adicionales"], image: "/image34.svg" },
-    { title: "Mobile Legends: BB", rating: "4.0", installed: true, tags: ["Multijugador"], image: "/image11.svg" },
-    { title: "Arknights", rating: "4.4", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image32.svg" },
-    { title: "DRAGON BALL LEGENDS", rating: "4.3", installed: true, tags: ["Multijugador"], image: "/image33.svg" },
-    { title: "Epic Seven", rating: "4.4", installed: false, tags: ["Un jugador"], image: "/image31.svg" },
-    { title: "Sonic Rumble", rating: "4.4", installed: true, tags: ["Multijugador"], image: "/image29.svg" },
-    { title: "Star Wars: GoH", rating: "4.2", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image35.svg" },
-    { title: "Candy Crush Saga", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image36.svg" },
-    { title: "Pokémon GO", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image37.svg" },
-    { title: "Final Fantasy BE", rating: "4.3", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image38.svg" },
-    { title: "Asphalt 9", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image39.svg" },
-    { title: "Real Racing 3", rating: "4.4", installed: true, tags: ["Un jugador"], image: "/image40.svg" },
-    { title: "The Sims Mobile", rating: "4.3", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image41.svg" },
-    { title: "Minecraft", rating: "4.8", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image42.svg" },
-    { title: "Subway Surfers", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image43.svg" },
-    { title: "Temple Run 2", rating: "4.2", installed: false, tags: ["Un jugador"], image: "/image44.svg" },
-    { title: "FIFA Mobile", rating: "4.6", installed: true, tags: ["Multijugador"], image: "/image45.svg" },
-    { title: "NBA 2K Mobile", rating: "4.3", installed: false, tags: ["Multijugador"], image: "/image46.svg" },
-    { title: "Brain Test", rating: "4.5", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image47.svg" },
-    { title: "Call of Duty Mobile", rating: "4.7", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image48.svg" },
-    { title: "PUBG Mobile", rating: "4.2", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image49.svg" },
-    { title: "Free Fire", rating: "4.5", installed: false, tags: ["Multijugador"], image: "/image50.svg" },
-];
+// 2. Data MOCK TEMÁTICA: 24 títulos ÚNICOS y RECONOCIBLES para CADA categoría.
+const CATEGORY_SPECIFIC_GAMES = {
+    // 24 Juegos de Acción
+    "Acción": [
+        { title: "Call of Duty Mobile", rating: "4.7", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image55.svg" },
+        { title: "PUBG Mobile", rating: "4.5", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image56.svg" },
+        { title: "Genshin Impact", rating: "4.8", installed: false, tags: ["Un jugador", "Sin compras adicionales"], image: "/image57.svg" },
+        { title: "Fortnite Mobile", rating: "4.0", installed: true, tags: ["Multijugador"], image: "/image58.svg" },
+        { title: "Free Fire Max", rating: "4.4", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image9.svg" },
+        { title: "Standoff 2", rating: "4.3", installed: true, tags: ["Multijugador"], image: "/image59.svg" },
+        { title: "Apex Legends Mobile", rating: "4.4", installed: false, tags: ["Un jugador"], image: "/image60.svg" },
+        { title: "Brawl Stars", rating: "4.4", installed: true, tags: ["Multijugador"], image: "/image61.svg" },
+        { title: "Valorant Mobile", rating: "4.2", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image62.svg" },
+        { title: "Dead by Daylight Mobile", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image63.svg" },
+        { title: "Critical Ops", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image64.svg" },
+        { title: "Modern Combat 5", rating: "4.3", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image65.svg" },
+        { title: "Asphalt 9: Legends", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image66.svg" },
+        { title: "War Robots", rating: "4.4", installed: true, tags: ["Un jugador"], image: "/image67.svg" },
+        { title: "Soul Knight", rating: "4.3", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image68.svg" },
+        { title: "T3 Arena", rating: "4.8", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image69.svg" },
+        { title: "Pixel Gun 3D", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image70.svg" },
+        { title: "Marvel Future Fight", rating: "4.2", installed: false, tags: ["Un jugador"], image: "/image71.svg" },
+        { title: "Shadowgun Legends", rating: "4.6", installed: true, tags: ["Multijugador"], image: "/image72.svg" },
+        { title: "Into the Dead 2", rating: "4.3", installed: false, tags: ["Multijugador"], image: "/image73.svg" },
+        { title: "Subway Surfers", rating: "4.5", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image74.svg" },
+        { title: "Honkai Impact 3rd", rating: "4.7", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image75.svg" },
+        { title: "Black Desert Mobile", rating: "4.2", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image76.svg" },
+        { title: "Dragon Ball Legends", rating: "4.5", installed: false, tags: ["Multijugador"], image: "/image33.svg" },
+    ],
+    
+    // 24 Juegos de Aventura
+    "Aventura": [
+        { title: "Minecraft Pocket Edition", rating: "4.5", installed: false, tags: ["Un jugador"], image: "/image77.svg" },
+        { title: "Terraria Mobile", rating: "4.6", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image78.svg" },
+        { title: "Roblox", rating: "4.3", installed: true, tags: ["Multijugador"], image: "/image79.svg" },
+        { title: "Stumble Guys", rating: "4.7", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image80.svg" },
+        { title: "Among Us", rating: "4.1", installed: true, tags: ["Un jugador"], image: "/image81.svg" },
+        { title: "Sky: Children of the Light", rating: "4.9", installed: false, tags: ["Multijugador", "Sin anuncios"], image: "/image82.svg" },
+        { title: "Limbo", rating: "4.0", installed: true, tags: ["Un jugador"], image: "/image83.svg" },
+        { title: "The Walking Dead", rating: "4.2", installed: false, tags: ["Multijugador"], image: "/image84.svg" },
+        { title: "Toca Life World", rating: "4.5", installed: true, tags: ["Un jugador", "Optimizados para PC"], image: "/image85.svg" },
+        { title: "Grand Theft Auto: San Andreas", rating: "4.8", installed: false, tags: ["Multijugador", "Sin compras adicionales"], image: "/image86.svg" },
+        { title: "Pokemon GO", rating: "4.3", installed: true, tags: ["Un jugador"], image: "/image87.svg" },
+        { title: "Oddmar", rating: "4.6", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image88.svg" },
+        { title: "Crash Bandicoot: On the Run!", rating: "4.4", installed: true, tags: ["Un jugador"], image: "/image89.svg" },
+        { title: "Harry Potter: Hogwarts Mystery", rating: "4.5", installed: false, tags: ["Multijugador"], image: "/image90.svg" },
+        { title: "Life Is Strange", rating: "4.7", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image91.svg" },
+        { title: "The Witness", rating: "4.0", installed: false, tags: ["Multijugador"], image: "/image92.svg" },
+        { title: "Machinarium", rating: "4.1", installed: true, tags: ["Un jugador", "Optimizados para PC"], image: "/image93.svg" },
+        { title: "Little Nightmares", rating: "4.5", installed: false, tags: ["Un jugador"], image: "/image94.svg" },
+        { title: "Oceanhorn 2", rating: "4.8", installed: true, tags: ["Multijugador"], image: "/image95.svg" },
+        { title: "Badland", rating: "4.3", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image96.svg" },
+        { title: "Alto's Odyssey", rating: "4.6", installed: true, tags: ["Un jugador"], image: "/image97.svg" },
+        { title: "Grim Fandango", rating: "4.4", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image98.svg" },
+        { title: "Five Nights at Freddy's", rating: "4.7", installed: true, tags: ["Un jugador"], image: "/image99.svg" },
+        { title: "Monument Valley 2", rating: "4.1", installed: false, tags: ["Multijugador"], image: "/image100.svg" },
+    ],
 
-// --- GENERACIÓN DEL CONJUNTO DE DATOS FINAL (8 categorías x 24 juegos = 192 JUEGOS) ---
+    // 24 Juegos de Carreras
+    "Carreras": [
+        { title: "Need for Speed No Limits", rating: "4.7", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image101.svg" },
+        { title: "Real Racing 3", rating: "4.5", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image102.svg" },
+        { title: "Forza Horizon Mobile", rating: "4.8", installed: false, tags: ["Un jugador", "Sin compras adicionales"], image: "/image103.svg" },
+        { title: "Hot Wheels Unlimited", rating: "4.0", installed: true, tags: ["Multijugador"], image: "/image104.svg" },
+        { title: "Mario Kart Tour", rating: "4.4", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image105.svg" },
+        { title: "Hill Climb Racing 2", rating: "4.3", installed: true, tags: ["Multijugador"], image: "/image106.svg" },
+        { title: "Drift Max Pro", rating: "4.4", installed: false, tags: ["Un jugador"], image: "/image107.svg" },
+        { title: "F1 Mobile Racing", rating: "4.4", installed: true, tags: ["Multijugador"], image: "/image108.svg" },
+        { title: "CarX Street", rating: "4.2", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image109.svg" },
+        { title: "Rush Hour 3D", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image110.svg" },
+        { title: "Gear.Club Stradale", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image111.svg" },
+        { title: "CSR Racing 2", rating: "4.3", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image112.svg" },
+        { title: "Traffic Rider", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image113.svg" },
+        { title: "Wreckfest Mobile", rating: "4.4", installed: true, tags: ["Un jugador"], image: "/image114.svg" },
+        { title: "Rebel Racing", rating: "4.3", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image115.svg" },
+        { title: "Top Drives", rating: "4.8", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image116.svg" },
+        { title: "Dirt Trackin 2", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image117.svg" },
+        { title: "Madalin Stunt Cars 2", rating: "4.2", installed: false, tags: ["Un jugador"], image: "/image118.svg" },
+        { title: "Mini Motor Racing", rating: "4.6", installed: true, tags: ["Multijugador"], image: "/image119.svg" },
+        { title: "Burnout Paradise Remastered", rating: "4.3", installed: false, tags: ["Multijugador"], image: "/image120.svg" },
+        { title: "PBA Bowling Challenge", rating: "4.5", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image121.svg" },
+        { title: "Need for Speed Most Wanted", rating: "4.7", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image122.svg" },
+        { title: "Horizon Chase", rating: "4.2", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image123.svg" },
+        { title: "Rally Fury", rating: "4.5", installed: false, tags: ["Multijugador"], image: "/image124.svg" },
+    ],
+    
+    // 24 Juegos de Deportes
+    "Deportes": [
+        { title: "EA Sports FC Mobile", rating: "4.6", installed: true, tags: ["Multijugador"], image: "/image125.svg" },
+        { title: "NBA 2K Mobile", rating: "4.5", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image126.svg" },
+        { title: "MLB The Show Mobile", rating: "4.8", installed: false, tags: ["Multijugador", "Sin compras adicionales"], image: "/image127.svg" },
+        { title: "WWE Champions", rating: "4.0", installed: true, tags: ["Un jugador"], image: "/image128.svg" },
+        { title: "PGA TOUR Golf Shootout", rating: "4.4", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image129.svg" },
+        { title: "Skate City", rating: "4.3", installed: true, tags: ["Multijugador"], image: "/image130.svg" },
+        { title: "Real Boxing 2", rating: "4.4", installed: false, tags: ["Un jugador"], image: "/image131.svg" },
+        { title: "Volley Raw", rating: "4.4", installed: true, tags: ["Multijugador"], image: "/image132.svg" },
+        { title: "Madden NFL 24 Mobile", rating: "4.2", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image133.svg" },
+        { title: "Flippy Knife", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image134.svg" },
+        { title: "8 Ball Pool", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image135.svg" },
+        { title: "World Cricket Championship 3", rating: "4.3", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image136.svg" },
+        { title: "FIFA Soccer", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image137.svg" },
+        { title: "WBSC eBaseball: Power Pros", rating: "4.4", installed: true, tags: ["Un jugador"], image: "/image138.svg" },
+        { title: "Top Eleven 2024", rating: "4.3", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image139.svg" },
+        { title: "Dream League Soccer 2024", rating: "4.8", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image140.svg" },
+        { title: "Rocket League Sideswipe", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image141.svg" },
+        { title: "FRAG Pro Shooter", rating: "4.2", installed: false, tags: ["Un jugador"], image: "/image142.svg" },
+        { title: "Archery King", rating: "4.6", installed: true, tags: ["Multijugador"], image: "/image143.svg" },
+        { title: "Tennis Clash: 3D Sports", rating: "4.3", installed: false, tags: ["Multijugador"], image: "/image144.svg" },
+        { title: "Head Ball 2", rating: "4.5", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image145.svg" },
+        { title: "Ultimate Fighting Game", rating: "4.7", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image146.svg" },
+        { title: "Fishing Clash", rating: "4.2", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image147.svg" },
+        { title: "NBA NOW 24", rating: "4.5", installed: false, tags: ["Multijugador"], image: "/image148.svg" },
+    ],
+
+    // 24 Juegos de Educativos
+    "Educativos": [
+        { title: "Duolingo", rating: "4.7", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image_edu_01.svg" },
+        { title: "Kahoot!", rating: "4.5", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_edu_02.svg" },
+        { title: "Photomath", rating: "4.8", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_edu_03.svg" },
+        { title: "Procreate Pocket (Art)", rating: "4.0", installed: false, tags: ["Un jugador"], image: "/image_edu_04.svg" },
+        { title: "Codecademy Go", rating: "4.4", installed: true, tags: ["Un jugador", "Optimizados para PC"], image: "/image_edu_05.svg" },
+        { title: "Solar System Scope", rating: "4.3", installed: false, tags: ["Un jugador"], image: "/image_edu_06.svg" },
+        { title: "Brainly", rating: "4.4", installed: true, tags: ["Un jugador"], image: "/image_edu_07.svg" },
+        { title: "Tinycards by Duolingo", rating: "4.4", installed: false, tags: ["Un jugador"], image: "/image_edu_08.svg" },
+        { title: "Simply Piano", rating: "4.2", installed: true, tags: ["Un jugador", "Optimizados para PC"], image: "/image_edu_09.svg" },
+        { title: "Elevate - Brain Training", rating: "4.5", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image_edu_10.svg" },
+        { title: "NASA App", rating: "4.7", installed: true, tags: ["Un jugador"], image: "/image_edu_11.svg" },
+        { title: "Lumosity", rating: "4.3", installed: true, tags: ["Un jugador", "Optimizados para PC"], image: "/image_edu_12.svg" },
+        { title: "Memrise", rating: "4.7", installed: false, tags: ["Un jugador"], image: "/image_edu_13.svg" },
+        { title: "Khan Academy", rating: "4.4", installed: true, tags: ["Un jugador"], image: "/image_edu_14.svg" },
+        { title: "Quizlet", rating: "4.3", installed: false, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_edu_15.svg" },
+        { title: "Geomerty Dash", rating: "4.8", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_edu_16.svg" },
+        { title: "Coursera", rating: "4.5", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image_edu_17.svg" },
+        { title: "Word Connect", rating: "4.2", installed: true, tags: ["Un jugador"], image: "/image_edu_18.svg" },
+        { title: "Star Walk 2", rating: "4.6", installed: false, tags: ["Un jugador"], image: "/image_edu_19.svg" },
+        { title: "Rosetta Stone", rating: "4.3", installed: true, tags: ["Un jugador"], image: "/image_edu_20.svg" },
+        { title: "Peak - Brain Games", rating: "4.5", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image_edu_21.svg" },
+        { title: "Drops: Language Learning", rating: "4.7", installed: true, tags: ["Un jugador", "Optimizados para PC"], image: "/image_edu_22.svg" },
+        { title: "Wikipedia", rating: "4.2", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image_edu_23.svg" },
+        { title: "Endless Reader", rating: "4.5", installed: true, tags: ["Un jugador"], image: "/image_edu_24.svg" },
+    ],
+    
+    // 24 Juegos de Estrategia
+    "Estrategia": [
+        { title: "Clash of Clans", rating: "4.9", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image_est_01.svg" },
+        { title: "Clash Royale", rating: "4.6", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image_est_02.svg" },
+        { title: "League of Legends: Wild Rift", rating: "4.5", installed: false, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_est_03.svg" },
+        { title: "Mobile Legends: Bang Bang", rating: "4.2", installed: true, tags: ["Multijugador"], image: "/image_est_04.svg" },
+        { title: "Hearthstone", rating: "4.7", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image_est_05.svg" },
+        { title: "Brawlhalla", rating: "4.1", installed: true, tags: ["Un jugador"], image: "/image_est_06.svg" },
+        { title: "The Battle of Polytopia", rating: "4.4", installed: false, tags: ["Un jugador"], image: "/image_est_07.svg" },
+        { title: "Teamfight Tactics (TFT)", rating: "4.3", installed: true, tags: ["Multijugador"], image: "/image_est_08.svg" },
+        { title: "Arknights", rating: "4.5", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image_est_09.svg" },
+        { title: "Rise of Kingdoms", rating: "4.8", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image_est_10.svg" },
+        { title: "Star Wars: Galaxy of Heroes", rating: "4.0", installed: false, tags: ["Un jugador"], image: "/image_est_11.svg" },
+        { title: "Bad North", rating: "4.6", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image_est_12.svg" },
+        { title: "XCOM 2 Collection", rating: "4.5", installed: false, tags: ["Multijugador"], image: "/image_est_13.svg" },
+        { title: "Bloons TD 6", rating: "4.2", installed: true, tags: ["Un jugador"], image: "/image_est_14.svg" },
+        { title: "Age of Empires Mobile", rating: "4.7", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image_est_15.svg" },
+        { title: "Plague Inc.", rating: "4.4", installed: false, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_est_16.svg" },
+        { title: "Boom Beach", rating: "4.3", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image_est_17.svg" },
+        { title: "Dota Underlords", rating: "4.5", installed: false, tags: ["Un jugador"], image: "/image_est_18.svg" },
+        { title: "Langrisser Mobile", rating: "4.8", installed: true, tags: ["Multijugador"], image: "/image_est_19.svg" },
+        { title: "Northgard", rating: "4.1", installed: false, tags: ["Multijugador"], image: "/image_est_20.svg" },
+        { title: "Command & Conquer: Rivals", rating: "4.6", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image_est_21.svg" },
+        { title: "Iron Marines Invasion", rating: "4.3", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image_est_22.svg" },
+        { title: "Slay the Spire", rating: "4.5", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image_est_23.svg" },
+        { title: "Auto Chess", rating: "4.2", installed: false, tags: ["Multijugador"], image: "/image_est_24.svg" },
+    ],
+
+    // 24 Juegos de Simulación
+    "Simulación": [
+        { title: "The Sims Mobile", rating: "4.8", installed: true, tags: ["Un jugador", "Optimizados para PC"], image: "/image_sim_01.svg" },
+        { title: "Farming Simulator 23", rating: "4.5", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_sim_02.svg" },
+        { title: "Airport City", rating: "4.4", installed: false, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_sim_03.svg" },
+        { title: "Euro Truck Simulator 2", rating: "4.0", installed: true, tags: ["Un jugador"], image: "/image_sim_04.svg" },
+        { title: "Stardew Valley", rating: "4.7", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image_sim_05.svg" },
+        { title: "Animal Crossing: Pocket Camp", rating: "4.3", installed: true, tags: ["Un jugador"], image: "/image_sim_06.svg" },
+        { title: "RollerCoaster Tycoon Touch", rating: "4.2", installed: false, tags: ["Un jugador"], image: "/image_sim_07.svg" },
+        { title: "BitLife - Life Simulator", rating: "4.5", installed: true, tags: ["Un jugador"], image: "/image_sim_08.svg" },
+        { title: "Pocket City 2", rating: "4.6", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image_sim_09.svg" },
+        { title: "AdVenture Capitalist", rating: "4.1", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image_sim_10.svg" },
+        { title: "Goat Simulator 3", rating: "4.4", installed: false, tags: ["Un jugador"], image: "/image_sim_11.svg" },
+        { title: "House Flipper: Home Design", rating: "4.7", installed: true, tags: ["Un jugador", "Optimizados para PC"], image: "/image_sim_12.svg" },
+        { title: "Jurassic World Alive", rating: "4.3", installed: false, tags: ["Un jugador"], image: "/image_sim_13.svg" },
+        { title: "Planes Live", rating: "4.5", installed: true, tags: ["Un jugador"], image: "/image_sim_14.svg" },
+        { title: "Project Hospital", rating: "4.8", installed: false, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_sim_15.svg" },
+        { title: "Fallout Shelter", rating: "4.0", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_sim_16.svg" },
+        { title: "Cooking Fever", rating: "4.6", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image_sim_17.svg" },
+        { title: "Idle Miner Tycoon", rating: "4.2", installed: true, tags: ["Un jugador"], image: "/image_sim_18.svg" },
+        { title: "Home Design Makeover", rating: "4.4", installed: false, tags: ["Un jugador"], image: "/image_sim_19.svg" },
+        { title: "My Singing Monsters", rating: "4.7", installed: true, tags: ["Un jugador"], image: "/image_sim_20.svg" },
+        { title: "Car Driving School Sim", rating: "4.3", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image_sim_21.svg" },
+        { title: "PC Building Simulator", rating: "4.5", installed: true, tags: ["Un jugador", "Optimizados para PC"], image: "/image_sim_22.svg" },
+        { title: "X-Plane 12 Flight Simulator", rating: "4.8", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image_sim_23.svg" },
+        { title: "Universe Sandbox 2", rating: "4.1", installed: true, tags: ["Un jugador"], image: "/image_sim_24.svg" },
+    ],
+
+    // 24 Juegos de Juegos de rol (RPG)
+    "Juegos de rol": [
+        { title: "Diablo Immortal", rating: "4.9", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image_rpg_01.svg" },
+        { title: "Raid: Shadow Legends", rating: "4.5", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image_rpg_02.svg" },
+        { title: "AFK Arena", rating: "4.8", installed: false, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_rpg_03.svg" },
+        { title: "Honkai: Star Rail", rating: "4.0", installed: true, tags: ["Multijugador"], image: "/image_rpg_04.svg" },
+        { title: "Summoners War", rating: "4.4", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image_rpg_05.svg" },
+        { title: "The Elder Scrolls Online", rating: "4.3", installed: true, tags: ["Multijugador"], image: "/image_rpg_06.svg" },
+        { title: "Final Fantasy VII: Ever Crisis", rating: "4.4", installed: false, tags: ["Un jugador"], image: "/image_rpg_07.svg" },
+        { title: "Ni no Kuni: Cross Worlds", rating: "4.4", installed: true, tags: ["Multijugador"], image: "/image_rpg_08.svg" },
+        { title: "EVE Echoes", rating: "4.2", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image_rpg_09.svg" },
+        { title: "CookieRun: Kingdom", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image_rpg_10.svg" },
+        { title: "Star Trek Fleet Command", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image_rpg_11.svg" },
+        { title: "Fate/Grand Order", rating: "4.3", installed: false, tags: ["Un jugador", "Optimizados para PC"], image: "/image_rpg_12.svg" },
+        { title: "Dragon Quest Builders", rating: "4.7", installed: false, tags: ["Multijugador"], image: "/image_rpg_13.svg" },
+        { title: "Lineage 2 Revolution", rating: "4.4", installed: true, tags: ["Un jugador"], image: "/image_rpg_14.svg" },
+        { title: "Tower of Fantasy", rating: "4.3", installed: true, tags: ["Un jugador", "Sin compras adicionales"], image: "/image_rpg_15.svg" },
+        { title: "Blade & Soul Revolution", rating: "4.8", installed: true, tags: ["Multijugador", "Sin compras adicionales"], image: "/image_rpg_16.svg" },
+        { title: "Marvel Realm of Champions", rating: "4.5", installed: true, tags: ["Un jugador", "Sin anuncios"], image: "/image_rpg_17.svg" },
+        { title: "Axie Infinity", rating: "4.2", installed: false, tags: ["Un jugador"], image: "/image_rpg_18.svg" },
+        { title: "Dislyte", rating: "4.6", installed: true, tags: ["Multijugador"], image: "/image_rpg_19.svg" },
+        { title: "Alchemy Stars", rating: "4.3", installed: false, tags: ["Multijugador"], image: "/image_rpg_20.svg" },
+        { title: "Epic Seven", rating: "4.5", installed: false, tags: ["Un jugador", "Sin anuncios"], image: "/image_rpg_21.svg" },
+        { title: "Pillars of Eternity", rating: "4.7", installed: false, tags: ["Multijugador", "Optimizados para PC"], image: "/image_rpg_22.svg" },
+        { title: "The Witcher: Monster Slayer", rating: "4.2", installed: true, tags: ["Multijugador", "Optimizados para PC"], image: "/image_rpg_23.svg" },
+        { title: "Runescape Mobile", rating: "4.5", installed: false, tags: ["Multijugador"], image: "/image_rpg_24.svg" },
+    ],
+};
+
+// --- GENERACIÓN DEL CONJUNTO DE DATOS FINAL (8 categorías x 24 juegos = 192 JUEGOS TEMÁTICOS) ---
 const ALL_GAMES = [];
 
 GAME_GENRE_CATEGORIES.forEach(category => {
-    BASE_24_GAMES.forEach((baseGame) => {
-        // Clonar el juego base y asignarle la categoría y un título dinámico
+    CATEGORY_SPECIFIC_GAMES[category].forEach((gameData, index) => {
         const newGame = {
-            ...baseGame,
-            category: category,
-            // Ejemplo de título: "Clash Royale (A)" o "Clash Royale (E)"
-            title: `${baseGame.title} (${category.substring(0, 1)})`, 
+            id: `${category}-${index}`, 
+            title: gameData.title,
+            rating: gameData.rating,
+            installed: gameData.installed,
+            tags: gameData.tags,
+            image: gameData.image,
+            // La categoría es la clave de filtrado
+            category: category, 
         };
         ALL_GAMES.push(newGame);
     });
@@ -249,6 +452,8 @@ const Search = () => {
         const nonGenreFilters = activeFilters.filter(f => !filterGroupsDefinition.genre.includes(f));
         
         let filteredByGenre = ALL_GAMES;
+        
+        // FILTRO DE GÉNERO: Si se seleccionó algún género, filtrar estrictamente.
         if (genreFilters.length > 0) {
             filteredByGenre = ALL_GAMES.filter(game => 
                 genreFilters.includes(game.category)
@@ -298,9 +503,9 @@ const Search = () => {
         });
 
         // 🚨 LÓGICA DE RESPALDO (FALLBACK) CRÍTICA: Garantiza que la cuadrícula nunca esté vacía.
+        // Si el resultado es cero después de aplicar TODOS los filtros, relaja los filtros restrictivos
         if (finalFilteredGames.length === 0 && activeFilters.length > 0) {
-            // Si el resultado es cero, volvemos al conjunto más grande posible:
-            // los juegos filtrados solo por Categoría de Género (o todos si no se eligió ninguna).
+             // Retorna solo los juegos filtrados por Género (o todos si no hay filtros de género).
             return filteredByGenre; 
         }
 
@@ -314,9 +519,11 @@ const Search = () => {
         let inactiveElements = []; 
         
         
-        // 🚨 CAMBIO DE MARGEN AQUÍ: Se reduce de mr-3 a mr-1.
+        // Botón "X" global (Limpiar Todo)
+        // Se activa si hay CUALQUIER filtro activo.
         if (activeFilters.length > 0) {
             activeElements.push(
+                // Ajuste de margen para pegarlo al primer filtro activo
                 <div key="global-clear-button" className="flex mr-1 items-center"> 
                     <ActiveFilterCloseButton onRemove={clearAllFilters} className="" />
                 </div>
@@ -330,7 +537,6 @@ const Search = () => {
             if (!renderedActiveLabels.has(label)) {
                  activeElements.push(
                     <div key={`active-label-${label}`} className="flex mr-3 items-center">
-                        {/* El botón 'X' individual se ha eliminado, solo queda el global */}
                         <FilterButton 
                             label={label} 
                             isActive={true}
@@ -469,9 +675,9 @@ const Search = () => {
             
             {/* CUADRÍCULA DE JUEGOS */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 pt-2">
-                {getFilteredGames.map((game, index) => (
+                {getFilteredGames.map((game) => (
                     <GameCard 
-                        key={index} 
+                        key={game.id} // Usamos la nueva ID única
                         game={game} 
                     />
                 ))}
